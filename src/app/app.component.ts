@@ -8,17 +8,23 @@ import { IAppareil } from './models/appareil.model';
 })
 export class AppComponent {
   isAuth = false;
+  lastUpdate = new Promise((resolve, reject) => {
+    const date = new Date()
+    setTimeout(() => {
+      resolve(date)
+    }, 2000)
 
+  })
   appareils: IAppareil[] = [
     {
       name: 'Machine à laver',
-      status: "allumer "
+      status: "allumé"
     }, {
       name: "Televions",
       status: "éteint"
     }, {
       name: "Ordinateur",
-      status: "éteint"
+      status: "allumé"
     }
   ]
   constructor() {

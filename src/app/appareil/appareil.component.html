@@ -1,4 +1,11 @@
-<li class="list-group-item">
-  <h4>Appareil: {{appareil.name }} -- Statut {{getStatus()}}</h4>
+<li [ngClass]="{'list-group-item':true, 
+'list-group-item-success': getListOnStatus(),
+'list-group-item-danger': getListOffStatus()
+
+}">
+  <div class="status"></div>
+  <h4 [ngStyle]="{
+    color:getColor()
+  }">Appareil: {{appareil.name }} -- Statut {{getStatus()}}</h4>
   <input type="text" class="form-control" [(ngModel)]="appareil.name">
 </li>

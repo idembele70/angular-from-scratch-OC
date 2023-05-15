@@ -18,4 +18,13 @@ export class AppareilComponent {
   public getStatus() {
     return this.appareil.status
   }
+  public getColor() {
+    return this.appareil.status === 'éteint' ? 'red' : 'green'
+  }
+  getListOffStatus = () => {
+    return this.appareil.status === 'éteint'
+  }
+  getListOnStatus = () => {
+    return this.appareil.status === 'allumé'
+  }
 }

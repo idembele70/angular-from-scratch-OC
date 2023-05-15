@@ -4,9 +4,10 @@
       <h2>Mes appareils</h2>
       <p>Mis à jour : {{lastUpdate | async }}</p>
       <ul class="list-group">
-        <app-appareil *ngFor="let appareil of appareils;" [appareil]="appareil"></app-appareil>
+        <app-appareil *ngFor="let appareil of appareils; let i = index;" [appareil]="appareil"></app-appareil>
       </ul>
-      <button class="btn btn-success" (click)="onAllumer()" [disabled]="!isAuth">Tout allumer</button>
+      <button class="btn btn-success" (click)="onSwitchOnAll()">Tout allumer</button>
+      <button class="btn btn-danger" (click)="onSwitchOffAll()">Tout Éteindre</button>
     </div>
   </div>
 </div>

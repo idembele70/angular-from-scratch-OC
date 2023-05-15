@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { IAppareil } from '../models/appareil.model';
+import { AppareilStatus, IAppareil } from '../models/appareil.model';
+import { AppareilService } from '../services/appareil.service';
 
 @Component({
   selector: 'app-appareil',
@@ -8,10 +9,10 @@ import { IAppareil } from '../models/appareil.model';
 })
 export class AppareilComponent {
   @Input() appareil: IAppareil = {
+    id: 0,
     name: "",
-    status: ""
+    status: AppareilStatus.OFF
   }
-
   /**
    * getStatus
    */
@@ -19,12 +20,21 @@ export class AppareilComponent {
     return this.appareil.status
   }
   public getColor() {
-    return this.appareil.status === 'éteint' ? 'red' : 'green'
+    return this.appareil.status === AppareilStatus.OFF ? 'red' : 'green'
   }
   getListOffStatus = () => {
-    return this.appareil.status === 'éteint'
+    return this.appareil.status === AppareilStatus.OFF
   }
   getListOnStatus = () => {
-    return this.appareil.status === 'allumé'
+    return this.appareil.status === AppareilStatus.ON
+  }
+  constructor(private appareilService: AppareilService) {
+
+  }
+  onSwitchOnOne = () => {
+    this.appareilService.switchOn(this.appareil.id)
+  }
+  onSwitchOffOne = () => {
+    this.appareilService.switchOff(this.appareil.id)
   }
 }

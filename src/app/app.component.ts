@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IAppareil } from './models/appareil.model';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,26 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-from-scratch-OC';
+  isAuth = false;
+
+  appareils: IAppareil[] = [
+    {
+      name: 'Machine à laver',
+      status: "allumer "
+    }, {
+      name: "Televions",
+      status: "éteint"
+    }, {
+      name: "Ordinateur",
+      status: "éteint"
+    }
+  ]
+  constructor() {
+    setTimeout(() => {
+      this.isAuth = true
+    }, 4000);
+  }
+  onAllumer = () => {
+    console.log("On allume tout !")
+  }
 }

@@ -18,6 +18,15 @@ const appareilList: IAppareil[] = [
     status: AppareilStatus.ON
   }
 ]
+const AppareilInitalText = appareilList.map(
+  ({ name, status }) => `Appareil: ${name} -- Statut ${status}`
+)
+const appareilTurnOnText = appareilList.map(
+  ({ name }) => `Appareil: ${name} -- Statut ${AppareilStatus.ON}`
+)
+const appareilTurnOffText = appareilList.map(
+  ({ name }) => `Appareil: ${name} -- Statut ${AppareilStatus.OFF}`
+)
 
 test.describe("appareils initial state", () => {
   test.beforeEach(async function ({ page }) {
@@ -25,7 +34,6 @@ test.describe("appareils initial state", () => {
   })
 
   test("Verify the initial state of all appareils", async ({ page }) => {
-    await page.goto("/")
     const appareilLocator = page.locator("li")
 
     // check if every appareil is in the dom
@@ -76,6 +84,10 @@ test.describe("appareils initial state", () => {
 
 })
 test.describe("switch on/off appareils", async () => {
+  test.beforeEach(async function ({ page }) {
+    await page.goto("/")
+  })
+
   test("should turn on an appareil", async ({ page }) => {
     const idx = 1
     const currentAppareil = page.locator("li").nth(idx)
@@ -86,16 +98,35 @@ test.describe("switch on/off appareils", async () => {
 
   })
   test("should turn off an appareil", async ({ page }) => {
-    const idx = 1
+    const idx = 2
     const currentAppareil = page.locator("li").nth(idx)
-    await isTurnOff({ currentAppareil, idx })
-    const turnOnBtn = currentAppareil.locator(".btn-success")
-    await turnOnBtn.click()
     await isTurnOn({ currentAppareil, idx })
+    const turnOffBtn = currentAppareil.locator(".btn-danger")
+    await turnOffBtn.click()
+    await isTurnOff({ currentAppareil, idx })
 
   })
-})
+  test("should turn on all appareils", async ({ page }) => {
+    const appareilName = page.locator("li h4")
 
+    await expect(appareilName).toHaveText(
+      AppareilInitalText
+    )
+    const turnAllOnBtn = page.locator("button").getByText("Tout Allumer")
+    await turnAllOnBtn.click()
+    await expect(appareilName).toHaveText(appareilTurnOnText)
+  })
+  test("should turn off all appareils", async ({ page }) => {
+    const appareilName = page.locator("li h4")
+
+    await expect(appareilName).toHaveText(
+      AppareilInitalText
+    )
+    const turnAllOffBtn = page.locator("button").getByText("Tout Éteindre")
+    await turnAllOffBtn.click()
+    await expect(appareilName).toHaveText(appareilTurnOffText)
+  })
+})
 interface ISwitchOnOff {
   currentAppareil: Locator;
   idx: number;

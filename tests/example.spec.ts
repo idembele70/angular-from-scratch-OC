@@ -123,7 +123,18 @@ test.describe("switch on/off appareils", async () => {
     await expect(appareilName).toHaveText(appareilTurnOffText)
   })
 })
+test.describe("appareil input", async () => {
+  test.beforeEach(async function ({ page }) {
+    await page.goto("/")
+  })
+})
 
+// navbar test
+test.describe("navbar", () => {
+  test.beforeEach(async function ({ page }) {
+    await page.goto("/")
+  })
+})
 interface CheckAppareilStylesOptions {
   currentAppareilOnBtn: Locator
   currentAppareilOffBtn: Locator

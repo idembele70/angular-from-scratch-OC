@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppareilStatus, IAppareil } from '../models/appareil.model';
+import { AppareilStatus, IAppareil } from '../../models/appareil.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +39,10 @@ export class AppareilService {
     this.appareils[id].status = AppareilStatus.OFF
   }
 
+  getAppareilById(id: number) {
+    return this.appareils.find(
+      appareil => appareil.id === id
+    )
+  }
   constructor() { }
 }

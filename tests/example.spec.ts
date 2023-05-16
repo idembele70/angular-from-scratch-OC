@@ -18,7 +18,7 @@ const appareilList: IAppareil[] = [
     status: AppareilStatus.ON
   }
 ]
-const AppareilInitalText = appareilList.map(
+const appareilInitalText = appareilList.map(
   ({ name, status }) => `Appareil: ${name} -- Statut ${status}`
 )
 const appareilTurnOnText = appareilList.map(
@@ -60,12 +60,8 @@ test.describe("appareils initial state", () => {
       expect(inputValue).toEqual(appareil.name)
     }
     // check appareil H4 text
-    const appareilNameLocatorInnerText = appareilList.map(
-      ({ name, status }) =>
-        `Appareil: ${name} -- Statut ${status}`
-    )
     await expect(appareilNameLocator).toHaveText(
-      appareilNameLocatorInnerText
+      appareilInitalText
     )
   })
   test("Verify the initial state of an turn off appareil", async ({ page }) => {
@@ -110,7 +106,7 @@ test.describe("switch on/off appareils", async () => {
     const appareilName = page.locator("li h4")
 
     await expect(appareilName).toHaveText(
-      AppareilInitalText
+      appareilInitalText
     )
     const turnAllOnBtn = page.locator("button").getByText("Tout Allumer")
     await turnAllOnBtn.click()
@@ -120,25 +116,24 @@ test.describe("switch on/off appareils", async () => {
     const appareilName = page.locator("li h4")
 
     await expect(appareilName).toHaveText(
-      AppareilInitalText
+      appareilInitalText
     )
     const turnAllOffBtn = page.locator("button").getByText("Tout Éteindre")
     await turnAllOffBtn.click()
     await expect(appareilName).toHaveText(appareilTurnOffText)
   })
 })
-interface ISwitchOnOff {
-  currentAppareil: Locator;
-  idx: number;
-}
 
-async function isTurnOn({ currentAppareil, idx }: ISwitchOnOff) {
-  // current appareil locators
-  const currentAppareilName = currentAppareil.locator("h4")
-  const currentAppareilOnBtn = currentAppareil.locator(".btn.btn-success")
-  const currentAppareilOffBtn = currentAppareil.locator(".btn.btn-danger")
-  const appareil = appareilList[idx]
-  //  Check appareil styles and attributes based on status
+interface CheckAppareilStylesOptions {
+  currentAppareilOnBtn: Locator
+  currentAppareilOffBtn: Locator
+  currentAppareil: Locator
+  currentAppareilName: Locator
+}
+async function checkAppareilStyles({ currentAppareilOnBtn,
+  currentAppareilOffBtn,
+  currentAppareil,
+  currentAppareilName, }: CheckAppareilStylesOptions) {
   await expect(currentAppareilOnBtn).toHaveCSS(
     "background-color", "rgb(92, 184, 92)"
   )
@@ -151,14 +146,24 @@ async function isTurnOn({ currentAppareil, idx }: ISwitchOnOff) {
   await expect(currentAppareilName).toHaveCSS(
     "color", "rgb(0, 128, 0)"
   )
+}
+interface ISwitchOnOff {
+  currentAppareil: Locator;
+  idx: number;
+}
+async function isTurnOn({ currentAppareil, idx }: ISwitchOnOff) {
+  // current appareil locators
+  const currentAppareilName = currentAppareil.locator("h4")
+  const currentAppareilOnBtn = currentAppareil.locator(".btn.btn-success")
+  const currentAppareilOffBtn = currentAppareil.locator(".btn.btn-danger")
+  //  Check appareil styles and attributes based on status
+  await checkAppareilStyles({ currentAppareil, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn })
   // check button attribute
   await expect(currentAppareilOnBtn).toBeDisabled()
   await expect(currentAppareilOffBtn).toBeEnabled()
   // check appareil H4 text
-  const appareilNameLocatorInnerText =
-    `Appareil: ${appareil.name} -- Statut ${AppareilStatus.ON}`
   await expect(currentAppareilName).toHaveText(
-    appareilNameLocatorInnerText
+    appareilTurnOnText[idx]
   )
 }
 async function isTurnOff({ currentAppareil, idx }: ISwitchOnOff) {
@@ -166,28 +171,14 @@ async function isTurnOff({ currentAppareil, idx }: ISwitchOnOff) {
   const currentAppareilName = currentAppareil.locator("h4")
   const currentAppareilOnBtn = currentAppareil.locator(".btn-success")
   const currentAppareilOffBtn = currentAppareil.locator(".btn-danger")
-  const appareil = appareilList[idx]
 
   //  Check appareil styles and attributes based on status
-  await expect(currentAppareilOnBtn).toHaveCSS(
-    "background-color", "rgb(92, 184, 92)"
-  )
-  await expect(currentAppareilOffBtn).toHaveCSS(
-    "background-color", "rgb(217, 83, 79)"
-  )
-  await expect(currentAppareil).toHaveCSS(
-    "background-color", "rgb(242, 222, 222)"
-  )
-  await expect(currentAppareilName).toHaveCSS(
-    "color", "rgb(255, 0, 0)"
-  )
+  await checkAppareilStyles({ currentAppareil, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn })
   // check button attribute
   await expect(currentAppareilOnBtn).toBeEnabled()
   await expect(currentAppareilOffBtn).toBeDisabled()
   // check appareil name and status
-  const appareilNameLocatorInnerText =
-    `Appareil: ${appareil.name} -- Statut ${AppareilStatus.OFF}`
   await expect(currentAppareilName).toHaveText(
-    appareilNameLocatorInnerText
+    appareilTurnOffText[idx]
   )
 }

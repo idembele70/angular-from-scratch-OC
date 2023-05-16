@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "e2e": "playwright test",
+    "e2e:debug": "npx playwright test --debug tests/example.spec.ts"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +28,7 @@
     "@angular-devkit/build-angular": "^16.0.0",
     "@angular/cli": "~16.0.0",
     "@angular/compiler-cli": "^16.0.0",
+    "@playwright/test": "^1.33.0",
     "@types/jasmine": "~4.3.0",
     "bootstrap": "^3.3.7",
     "jasmine-core": "~4.6.0",

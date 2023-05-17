@@ -8,18 +8,18 @@ import { Observable } from 'rxjs';
 })
 export class AuthGuardService {
   constructor(private authService: AuthService) { }
-
 }
 
 export const AuthGuard: CanActivateFn =
-  (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean => {
+  (): boolean => {
     const authService = inject(AuthService)
+    const router = inject(Router)
     if (authService.isAuth)
       return true
     else
-      inject(Router).navigate(["/auth"])
+      router.navigate(["/auth"])
     return false
   }
+
+/*
+*/

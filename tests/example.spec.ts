@@ -193,3 +193,8 @@ async function isTurnOff({ currentAppareil, idx }: ISwitchOnOff) {
     appareilTurnOffText[idx]
   )
 }
+
+export {
+  isTurnOn,
+  isTurnOff,
+}

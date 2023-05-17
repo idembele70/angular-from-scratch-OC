@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "e2e": "playwright test",
-    "e2e:debug": "npx playwright test --debug tests/example.spec.ts"
+    "e2e:debug": "npx playwright test --debug"
   },
   "private": true,
   "dependencies": {

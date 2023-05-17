@@ -16,7 +16,7 @@ export class AuthComponent {
   onSignIn = () => {
     this.authService.signIn().then(
       isAuth => {
-        this.router.navigate(["appareils"])
+        this.router.navigate([""])
         this.authStatus = isAuth
       }
     )

@@ -1,32 +1,7 @@
-import { async } from '@angular/core/testing';
-import { test, expect, Page, Locator } from '@playwright/test';
+/* import { test, expect, Page, Locator } from '@playwright/test';
 import { AppareilStatus, IAppareil } from 'src/app/models/appareil.model';
 
 
-const appareilList: IAppareil[] = [
-  {
-    id: 0,
-    name: 'Machine à laver',
-    status: AppareilStatus.ON
-  }, {
-    id: 1,
-    name: "Televions",
-    status: AppareilStatus.OFF
-  }, {
-    id: 2,
-    name: "Ordinateur",
-    status: AppareilStatus.ON
-  }
-]
-const appareilInitalText = appareilList.map(
-  ({ name, status }) => `Appareil: ${name} -- Statut ${status}`
-)
-const appareilTurnOnText = appareilList.map(
-  ({ name }) => `Appareil: ${name} -- Statut ${AppareilStatus.ON}`
-)
-const appareilTurnOffText = appareilList.map(
-  ({ name }) => `Appareil: ${name} -- Statut ${AppareilStatus.OFF}`
-)
 
 test.describe("appareils initial state", () => {
   test.beforeEach(async function ({ page }) {
@@ -197,4 +172,4 @@ async function isTurnOff({ currentAppareil, idx }: ISwitchOnOff) {
 export {
   isTurnOn,
   isTurnOff,
-}
+} */

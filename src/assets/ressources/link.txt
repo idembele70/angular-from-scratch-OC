@@ -1,0 +1,1 @@
+1 - execute-specific-test : https://www.programsbuzz.com/article/playwright-run-only-one-test

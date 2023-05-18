@@ -1,5 +1,5 @@
-import { Page, expect, test } from "@playwright/test";
-import { signIn } from "./sign.spec";
+import { test } from "@playwright/test";
+import { signIn, validatePageURL } from "../utils";
 
 test.describe("routing", () => {
   test("should restrict access to protected routes for non-signed-in users", async ({ page, baseURL }) => {
@@ -39,21 +39,3 @@ test.describe("routing", () => {
 
 
 
-interface URLValidationParams {
-  page: Page,
-  baseURL: string
-  path: string
-}
-
-const validatePageURL = ({ page, baseURL, path }: URLValidationParams) => {
-  const url = page.url()
-  const currentUrl = `${baseURL}/${path}`
-  expect(url).toEqual(currentUrl)
-}
-
-
-
-export {
-  URLValidationParams,
-  validatePageURL,
-}

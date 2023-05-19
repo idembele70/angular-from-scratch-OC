@@ -1,1 +1,3 @@
 1 - execute-specific-test : https://www.programsbuzz.com/article/playwright-run-only-one-test
+2 - folder structure : https://www.youtube.com/watch?v=J9nxbGRRf0I
+3 - folder structure : https://medium.com/geekculture/grouping-and-organising-test-suite-in-playwright-dccf2c55d776

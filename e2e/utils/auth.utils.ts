@@ -1,15 +1,16 @@
-import { Locator, Page, expect } from "@playwright/test"
+import { expect } from "@playwright/test"
 import { URLValidationParams } from "./commons.utils"
 
-type SignParams = Omit<URLValidationParams, "path">
+// used in auth.spec
+type PageInfo = Omit<URLValidationParams, "path">
 
-const signIn = async ({ page, baseURL }: SignParams) => {
+const signIn = async ({ page, baseURL }: PageInfo) => {
   const signInBtn = page.locator('button').getByText("Se connecter")
   await signInBtn.click()
   const redirectedUrl = `${baseURL}/`
   await page.waitForURL(redirectedUrl)
 }
-const isSignIn = async ({ page }: SignParams) => {
+const isSignIn = async ({ page }: PageInfo) => {
   const signInBtn = page.locator('button').getByText("Se connecter")
   const signOutBtn = page.locator('button').getByText("Se deconnecter")
   const isSignOutBtnVisible = await signOutBtn.isVisible()
@@ -18,11 +19,11 @@ const isSignIn = async ({ page }: SignParams) => {
   expect(isSignInBtnHidden).toBeTruthy()
 }
 
-const signOut = async ({ page }: SignParams) => {
+const signOut = async ({ page }: PageInfo) => {
   const signOutBtn = page.locator('button').getByText("Se deconnecter")
   await signOutBtn.click()
 }
-const isSignOut = async ({ page }: SignParams) => {
+const isSignOut = async ({ page }: PageInfo) => {
   const signInBtn = page.locator('button').getByText("Se connecter")
   const signOutBtn = page.locator('button').getByText("Se deconnecter")
   await expect(signInBtn).toBeVisible()
@@ -30,8 +31,5 @@ const isSignOut = async ({ page }: SignParams) => {
 }
 
 export {
-  signIn,
-  isSignIn,
-  signOut,
-  isSignOut,
+  PageInfo, isSignIn, isSignOut, signIn, signOut
 }

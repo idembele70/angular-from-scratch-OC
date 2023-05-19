@@ -8,7 +8,7 @@
     color:getColor()
   }">Appareil: {{appareil.name }} -- Statut {{getStatus()}}</h4>
   <input type="text" class="form-control" [(ngModel)]="appareil.name">
-  <a href="" [routerLink]="[appareil.id]">détails</a>
+  <a [routerLink]="'/appareils/' + [appareil.id]">détails</a>
   <button class="btn btn-success" (click)="onSwitchOnOne()" [disabled]="appareil.status === 'allumé'">Allumer</button>
   <button class="btn btn-danger" (click)="onSwitchOffOne()" [disabled]="appareil.status === 'éteint'">Éteindre</button>
 </li>

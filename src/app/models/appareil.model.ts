@@ -1,3 +1,4 @@
+// used on test files
 export interface IAppareil {
   id: number;
   name: string;

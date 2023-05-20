@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm8 col-sm-offeset-2">
-    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <form data-testid="edit-appareil-wrapper" (ngSubmit)="onSubmit(f)" #f="ngForm">
       <div class="form-group">
         <label for="name">Nom de l'appareil</label>
         <input type="text" id="name" class="form-control" name="name" ngModel required>

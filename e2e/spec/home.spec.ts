@@ -32,11 +32,11 @@ test.describe('home page tests', () => {
       expect(inputValue).toEqual(appareil.name)
 
       // check if details link work well
-      const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, idx, parentLocator: currentAppareil }
+      const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, appareil, parentLocator: currentAppareil }
       await checkDetailsLinkFunctionality(checkDetailsLinkFunctionalityOptions)
 
       //  Check appareil styles and attributes based on status
-      const turnOnOffOptions: TurnOnOffParams = { currentAppareil, idx }
+      const turnOnOffOptions: TurnOnOffParams = { appareilLocator: currentAppareil, appareil }
       if (appareil.status === AppareilStatus.ON)
         await isTurnOn(turnOnOffOptions)
       else {
@@ -53,40 +53,53 @@ test.describe('home page tests', () => {
   test("should verify the initial state of an turn off appareil", async ({ page, baseURL }) => {
     // appareils Locators
     const idx = 1
+    const appareil = appareilList[idx]
     const homeLocator = page.getByTestId("home-wrapper")
-    const currentAppareilLocator = homeLocator.locator("li").nth(idx)
-    await isTurnOff({ currentAppareil: currentAppareilLocator, idx })
-    const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, idx, parentLocator: currentAppareilLocator }
+    const { name, status } = appareil
+    const appareilLocator = homeLocator.locator("li").filter(
+      { hasText: new RegExp(`Appareil: ${name} -- Statut ${status}`) }
+    )
+    await isTurnOff({ appareilLocator, appareil })
+    const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, appareil, parentLocator: appareilLocator }
     await checkDetailsLinkFunctionality(checkDetailsLinkFunctionalityOptions)
   })
 
   test("should verify the initial state of an turn on appareil", async ({ page, baseURL }) => {
     const idx = 0
+    const appareil = appareilList[idx]
     // appareils Locators
     const homeLocator = page.getByTestId("home-wrapper")
-    const currentAppareil = homeLocator.locator("li").nth(idx)
-    await isTurnOn({ currentAppareil, idx })
-    const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, idx, parentLocator: currentAppareil }
+    const { name, status } = appareil
+    const appareilLocator = homeLocator.locator("li").filter(
+      { hasText: new RegExp(`Appareil: ${name} -- Statut ${status}`) }
+    )
+    await isTurnOn({ appareilLocator, appareil: appareilList[idx] })
+    const checkDetailsLinkFunctionalityOptions: CheckDetailsLinkFunctionalityParams = { page, baseURL, appareil, parentLocator: appareilLocator }
     await checkDetailsLinkFunctionality(checkDetailsLinkFunctionalityOptions)
   })
 
   test("should turn on an appareil", async ({ page }) => {
     const idx = 1
     const homeLocator = page.getByTestId("home-wrapper")
-    const currentAppareil = homeLocator.locator(".list-group .list-group-item").nth(idx)
-    const turnOnOffOptions: TurnOnOffParams = { currentAppareil, idx }
+    const appareilLocator = homeLocator.locator(".list-group .list-group-item").filter(
+      { hasText: new RegExp(`${appareilList[idx].name}`, "g") }
+    )
+    const turnOnOffOptions: TurnOnOffParams = { appareilLocator, appareil: appareilList[idx] }
     await isTurnOff(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Allumer" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Allumer" })
     await isTurnOn(turnOnOffOptions)
   })
 
   test("should turn off an appareil", async ({ page }) => {
     const idx = 2
     const homeLocator = page.getByTestId("home-wrapper")
-    const currentAppareil = homeLocator.locator(".list-group .list-group-item").nth(idx)
-    const turnOnOffOptions: TurnOnOffParams = { currentAppareil, idx }
+
+    const appareilLocator = homeLocator.locator(".list-group .list-group-item").filter(
+      { hasText: new RegExp(`${appareilList[idx].name}`, "g") }
+    )
+    const turnOnOffOptions: TurnOnOffParams = { appareilLocator, appareil: appareilList[idx] }
     await isTurnOn(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Éteindre" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Éteindre" })
     await isTurnOff(turnOnOffOptions)
 
   })
@@ -109,23 +122,29 @@ test.describe('home page tests', () => {
 
   test("should turn on and off one appareil", async ({ page }) => {
     const idx = 1
-    const currentAppareil = page.locator(".list-group .list-group-item").nth(idx)
-    const turnOnOffOptions: TurnOnOffParams = { currentAppareil, idx }
+    const appareilLocator = page.locator(".list-group .list-group-item").
+      filter({
+        hasText: new RegExp(appareilList[idx].name)
+      })
+    const turnOnOffOptions: TurnOnOffParams = { appareilLocator, appareil: appareilList[idx] }
     await isTurnOff(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Allumer" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Allumer" })
     await isTurnOn(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Éteindre" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Éteindre" })
     await isTurnOff(turnOnOffOptions)
   })
 
   test("should turn off and on one appareil", async ({ page }) => {
     const idx = 2
-    const currentAppareil = page.locator(".list-group .list-group-item").nth(idx)
-    const turnOnOffOptions: TurnOnOffParams = { currentAppareil, idx }
+    const appareilLocator = page.locator(".list-group .list-group-item").
+      filter({
+        hasText: new RegExp(appareilList[idx].name)
+      })
+    const turnOnOffOptions: TurnOnOffParams = { appareilLocator, appareil: appareilList[idx] }
     await isTurnOn(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Éteindre" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Éteindre" })
     await isTurnOff(turnOnOffOptions)
-    await toggleAppareilStatus({ locator: currentAppareil, innerText: "Allumer" })
+    await toggleAppareilStatus({ locator: appareilLocator, innerText: "Allumer" })
     await isTurnOn(turnOnOffOptions)
   })
 

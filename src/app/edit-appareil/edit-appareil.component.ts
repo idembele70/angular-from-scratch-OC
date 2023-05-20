@@ -20,7 +20,7 @@ export class EditAppareilComponent {
     const name = formData.value["name"] as string
     const status = formData.value["status"] as AppareilStatus
     this.appareilService.addAppareil({
-      status, name, id: 0
+      status, name, id: Date.now()
     })
     this.router.navigate(["/appareils"])
   }

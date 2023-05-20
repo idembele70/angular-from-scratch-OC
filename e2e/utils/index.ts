@@ -3,7 +3,7 @@ export {
   validatePageURL,
   navigateWithRouterLink,
   assertCurrentRouteNavLinkActive,
-  RouterLinkParams
+  RouterLinkParams,
 } from "./commons.utils"
 
 export {
@@ -11,7 +11,7 @@ export {
   isSignOut,
   signIn,
   signOut,
-  PageInfo
+  PageInfo,
 } from "./auth.utils"
 
 export {
@@ -22,10 +22,15 @@ export {
   ToggleAppareilStatusParams,
   toggleAppareilStatus,
   CheckDetailsLinkFunctionalityParams,
-  checkDetailsLinkFunctionality
+  checkDetailsLinkFunctionality,
 } from "./home.utils"
 
 export {
   isAppareilDetailsPageParams,
-  isAppareilDetailsPage
-} from "./appareil.utils"
+  isAppareilDetailsPage,
+} from "./appareilDetails.utils"
+
+export {
+  AddAppareilParams,
+  addAppareil,
+} from "./newAppareil.utils"

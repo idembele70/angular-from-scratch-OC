@@ -26,6 +26,7 @@ export class AppareilComponent {
     return this.appareil.status === AppareilStatus.OFF
   }
   getListOnStatus = () => {
+
     return this.appareil.status === AppareilStatus.ON
   }
   constructor(private appareilService: AppareilService) {

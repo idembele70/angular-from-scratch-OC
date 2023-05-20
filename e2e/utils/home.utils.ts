@@ -1,9 +1,6 @@
-import { Locator, Page, PlaywrightTestArgs, PlaywrightTestOptions, PlaywrightWorkerArgs, PlaywrightWorkerOptions, expect } from "@playwright/test"
-import { appareilList, appareilTurnOffText, appareilTurnOnText } from "e2e/data"
-import { signIn } from "./auth.utils"
-import { RouterLinkParams, URLValidationParams, assertCurrentRouteNavLinkActive, navigateWithRouterLink, validatePageURL } from "./commons.utils"
-import { AppareilStatus } from "src/app/models/appareil.model"
-import { isAppareilDetailsPage } from "./appareil.utils"
+import { Locator, Page, expect } from "@playwright/test";
+import { AppareilStatus, IAppareil } from "src/app/models/appareil.model";
+import { RouterLinkParams, assertCurrentRouteNavLinkActive, isAppareilDetailsPage, navigateWithRouterLink } from "./index";
 
 
 enum StyleStatus {
@@ -45,38 +42,39 @@ async function checkAppareilStyles({ currentAppareilOnBtn,
 }
 
 interface TurnOnOffParams {
-  currentAppareil: Locator;
-  idx: number;
+  appareilLocator: Locator;
+  appareil: IAppareil;
 }
-async function isTurnOn({ currentAppareil, idx }: TurnOnOffParams) {
-  // current appareil locators
-  const currentAppareilName = currentAppareil.locator("h4")
-  const currentAppareilOnBtn = currentAppareil.locator(".btn.btn-success")
-  const currentAppareilOffBtn = currentAppareil.locator(".btn.btn-danger")
+async function isTurnOn({ appareilLocator, appareil }: TurnOnOffParams) {
+  const currentAppareilName = appareilLocator.locator("h4")
+  const currentAppareilOnBtn = appareilLocator.locator(".btn.btn-success")
+  const currentAppareilOffBtn = appareilLocator.locator(".btn.btn-danger")
   //  Check appareil styles and attributes based on status
-  await checkAppareilStyles({ currentAppareil, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn, status: StyleStatus.ON })
+  await checkAppareilStyles({ currentAppareil: appareilLocator, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn, status: StyleStatus.ON })
   // check button attribute
   await expect(currentAppareilOnBtn).toBeDisabled()
   await expect(currentAppareilOffBtn).toBeEnabled()
   // check appareil H4 text
   await expect(currentAppareilName).toHaveText(
-    appareilTurnOnText[idx]
+    `Appareil: ${appareil.name} -- Statut ${AppareilStatus.ON}`
   )
 }
-async function isTurnOff({ currentAppareil, idx }: TurnOnOffParams) {
+async function isTurnOff({ appareilLocator, appareil }: TurnOnOffParams) {
   //current appareils locator
-  const currentAppareilName = currentAppareil.locator("h4")
-  const currentAppareilOnBtn = currentAppareil.locator(".btn-success")
-  const currentAppareilOffBtn = currentAppareil.locator(".btn-danger")
+  const currentAppareilName = appareilLocator.locator("h4")
+  const currentAppareilOnBtn = appareilLocator.locator(".btn-success")
+  const currentAppareilOffBtn = appareilLocator.locator(".btn-danger")
 
   //  Check appareil styles and attributes based on status
-  await checkAppareilStyles({ currentAppareil, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn, status: StyleStatus.OFF })
+  await checkAppareilStyles({ currentAppareil: appareilLocator, currentAppareilName, currentAppareilOffBtn, currentAppareilOnBtn, status: StyleStatus.OFF })
+
   // check button attribute
   await expect(currentAppareilOnBtn).toBeEnabled()
   await expect(currentAppareilOffBtn).toBeDisabled()
+
   // check appareil name and status
   await expect(currentAppareilName).toHaveText(
-    appareilTurnOffText[idx]
+    `Appareil: ${appareil.name} -- Statut ${AppareilStatus.OFF}`
   )
 }
 interface ToggleAppareilStatusParams {
@@ -90,17 +88,15 @@ async function toggleAppareilStatus({ locator, innerText }: ToggleAppareilStatus
 
 interface CheckDetailsLinkFunctionalityParams {
   parentLocator: Locator;
-  idx: number;
+  appareil: IAppareil;
   page: Page,
   baseURL?: string
 }
 
-async function checkDetailsLinkFunctionality({ parentLocator, idx, page, baseURL }: CheckDetailsLinkFunctionalityParams) {
+async function checkDetailsLinkFunctionality({ parentLocator, appareil, page, baseURL }: CheckDetailsLinkFunctionalityParams) {
   const appareilDetailLink = parentLocator.locator("a").getByText("détails")
   await appareilDetailLink.click()
-  const { id, name, status } = appareilList[idx]
-  const options = { page, baseURL: baseURL || "" }
-  validatePageURL({ ...options, path: `appareils/${id}` })
+  const { name, status } = appareil
   await isAppareilDetailsPage({ page, name, status })
   const routerLinkOptions: RouterLinkParams = { page, innerText: "appareils" }
   await assertCurrentRouteNavLinkActive(routerLinkOptions)
@@ -108,12 +104,5 @@ async function checkDetailsLinkFunctionality({ parentLocator, idx, page, baseURL
 }
 
 export {
-  checkAppareilStyles,
-  TurnOnOffParams,
-  isTurnOn,
-  isTurnOff,
-  ToggleAppareilStatusParams,
-  toggleAppareilStatus,
-  CheckDetailsLinkFunctionalityParams,
-  checkDetailsLinkFunctionality
-}
+  CheckDetailsLinkFunctionalityParams, ToggleAppareilStatusParams, TurnOnOffParams, checkAppareilStyles, checkDetailsLinkFunctionality, isTurnOff, isTurnOn, toggleAppareilStatus
+};

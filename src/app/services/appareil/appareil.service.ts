@@ -42,11 +42,17 @@ export class AppareilService {
   }
 
   switchOn = (id: number) => {
-    this.appareils[id].status = AppareilStatus.ON
+    for (let appareil of this.appareils) {
+      if (appareil.id === id)
+        appareil.status = AppareilStatus.ON
+    }
     this.emitAppareilSubject()
   }
   switchOff = (id: number) => {
-    this.appareils[id].status = AppareilStatus.OFF
+    for (let appareil of this.appareils) {
+      if (appareil.id === id)
+        appareil.status = AppareilStatus.OFF
+    }
     this.emitAppareilSubject()
   }
 
@@ -56,7 +62,7 @@ export class AppareilService {
     )
   }
   addAppareil(newAppareil: IAppareil) {
-    this.appareils.push({ ...newAppareil, id: this.appareils.length })
+    this.appareils.push({ ...newAppareil, id: Date.now() })
     this.emitAppareilSubject()
   }
   constructor() { }

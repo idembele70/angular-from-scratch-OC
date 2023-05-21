@@ -1,3 +1,4 @@
+
 import { test, expect } from "@playwright/test"
 import { RouterLinkParams, PageInfo, URLValidationParams, assertCurrentRouteNavLinkActive, isSignIn, isSignOut, navigateWithRouterLink, signIn, signOut, validatePageURL, } from "../utils"
 
@@ -8,8 +9,7 @@ test.describe('Auth page tests', () => {
   test.beforeEach(async ({ page, baseURL }) => {
     const path = "auth"
     await page.goto(`/${path}`)
-    const validatePageURLOptions: URLValidationParams = { page, baseURL: baseURL || "", path }
-    validatePageURL(validatePageURLOptions)
+    validatePageURL({ page, baseURL: baseURL || "", path })
   })
 
   test("should sign in", async ({ page, baseURL }) => {
@@ -38,6 +38,8 @@ test.describe('Auth page tests', () => {
     const pageInfo: PageInfo = { page, baseURL: baseURL || "" }
     await isSignOut(pageInfo)
     await signIn(pageInfo)
+    navigateWithRouterLink({ page, innerText: "Authentification" })
+    await isSignIn(pageInfo)
     await page.reload()
     validatePageURL({ ...pageInfo, path: "auth" })
     await isSignOut({ ...pageInfo })
@@ -60,22 +62,25 @@ test.describe('Auth page tests', () => {
     await isSignOut(pageInfo)
     await signIn(pageInfo)
     validatePageURL({ ...pageInfo, path: "" })
+    await navigateWithRouterLink({ page, innerText: "Authentification" })
+    validatePageURL({ ...pageInfo, path: "auth" })
+    await isSignIn(pageInfo)
     await navigateWithRouterLink({ page, innerText: "Nouvel appareil" })
     validatePageURL({ ...pageInfo, path: "edit" })
     await navigateWithRouterLink({ page, innerText: "Appareils" })
     validatePageURL({ ...pageInfo, path: "appareils" })
-    await navigateWithRouterLink({ page, innerText: "Authentification" })
-    validatePageURL({ ...pageInfo, path: "auth" })
   })
 
-  test('should verify if auth nav link is active', async ({ page }) => {
+  test('should verify if auth nav link is active', async ({ page, baseURL }) => {
     const routerLinkOptions: RouterLinkParams = { page, innerText: "authentification" }
     await assertCurrentRouteNavLinkActive(routerLinkOptions)
     await page.reload()
     await assertCurrentRouteNavLinkActive(routerLinkOptions)
     await navigateWithRouterLink(routerLinkOptions)
     await assertCurrentRouteNavLinkActive(routerLinkOptions)
+    await signIn({ page, baseURL: baseURL || "" })
+    await navigateWithRouterLink(routerLinkOptions)
+    await assertCurrentRouteNavLinkActive(routerLinkOptions)
   })
-
 
 })

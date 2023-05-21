@@ -1,19 +1,17 @@
 import { Locator, Page, expect } from "@playwright/test"
 
-// used by PageInfo
+// used in multiple files
 interface URLValidationParams {
   page: Page,
   baseURL: string
   path: string
 }
-
 const validatePageURL = ({ page, baseURL, path }: URLValidationParams) => {
   const url = page.url()
-  const currentUrl = `${baseURL}/${path}`
-  expect(url).toEqual(currentUrl)
+  expect(url).toEqual(`${baseURL}/${path}`)
 }
 
-//used in auth.spec
+//used in multiple files
 interface RouterLinkParams {
   page: Page;
   innerText: string;
@@ -22,6 +20,7 @@ const navigateWithRouterLink = async ({ page, innerText }: RouterLinkParams) => 
   const navLink = page.locator(".nav.navbar-nav li a").getByText(innerText)
   await navLink.click()
 }
+
 const assertCurrentRouteNavLinkActive = async ({ page, innerText }: RouterLinkParams) => {
   const navListItem = page.locator(".nav.navbar-nav li").
     filter(

@@ -29,6 +29,8 @@ export {
 export {
   isAppareilDetailsPageParams,
   isAppareilDetailsPage,
+  goToDetailsPage,
+  AppareilDetailsPageParamsWithoutStatus,
 } from "./appareilDetails.utils"
 
 export {

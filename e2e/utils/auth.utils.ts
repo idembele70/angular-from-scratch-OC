@@ -1,3 +1,4 @@
+
 import { expect } from "@playwright/test"
 import { URLValidationParams } from "./commons.utils"
 
@@ -10,6 +11,7 @@ const signIn = async ({ page, baseURL }: PageInfo) => {
   await signInBtn.click()
   await page.waitForURL(`${baseURL}/`)
 }
+
 const isSignIn = async ({ page }: PageInfo) => {
   const authWrapper = page.getByTestId("auth-wrapper")
   const signInBtn = authWrapper.locator('button').getByText("Se connecter")

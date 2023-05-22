@@ -12,8 +12,7 @@ async function isAppareilDetailsPage({ page, name, status, baseURL }: isAppareil
   const appareilStatusText = page.locator('p').getByText(`Statut: ${status}`)
   const appareilPageLink = page.getByRole("link", { name: "Retour à la liste" })
   if (baseURL) {
-    const urlRegex = new RegExp(`${baseURL}/appareils/\\d+`)
-    await expect(page).toHaveURL(urlRegex)
+    await expect(page).toHaveURL(new RegExp(`${baseURL}/appareils/\\d+`))
   }
   await expect(appareilName).toBeVisible()
   await expect(appareilStatusText).toBeVisible()

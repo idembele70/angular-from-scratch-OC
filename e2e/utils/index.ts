@@ -4,6 +4,7 @@ export {
   navigateWithRouterLink,
   assertCurrentRouteNavLinkActive,
   RouterLinkParams,
+  fillInput
 } from "./commons.utils"
 
 export {
@@ -16,13 +17,13 @@ export {
 
 export {
   checkAppareilStyles,
-  TurnOnOffParams,
-  isTurnOn,
-  isTurnOff,
   ToggleAppareilStatusParams,
   toggleAppareilStatus,
   CheckDetailsLinkFunctionalityParams,
   checkDetailsLinkFunctionality,
+  CheckAppareilStatusParams,
+  CheckAppareilInfo,
+  checkAppareilStatus
 } from "./home.utils"
 
 export {

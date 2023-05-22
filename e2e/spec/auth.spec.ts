@@ -2,8 +2,6 @@
 import { test, expect } from "@playwright/test"
 import { RouterLinkParams, PageInfo, URLValidationParams, assertCurrentRouteNavLinkActive, isSignIn, isSignOut, navigateWithRouterLink, signIn, signOut, validatePageURL, } from "../utils"
 
-
-
 test.describe('Auth page tests', () => {
 
   test.beforeEach(async ({ page, baseURL }) => {

@@ -4,7 +4,10 @@ export {
   navigateWithRouterLink,
   assertCurrentRouteNavLinkActive,
   RouterLinkParams,
-  fillInput
+  fillInput,
+  getAppareil,
+  getAppareilById,
+
 } from "./commons.utils"
 
 export {
@@ -23,7 +26,7 @@ export {
   checkDetailsLinkFunctionality,
   CheckAppareilStatusParams,
   CheckAppareilInfo,
-  checkAppareilStatus
+  checkAppareilStatus,
 } from "./home.utils"
 
 export {

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import { PageInfo, RouterLinkParams, TurnOnOffParams, addAppareil, assertCurrentRouteNavLinkActive, checkDetailsLinkFunctionality, isTurnOff, isTurnOn, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from "e2e/utils"
+import { PageInfo, RouterLinkParams, addAppareil, assertCurrentRouteNavLinkActive, checkAppareilStatus, checkDetailsLinkFunctionality, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from "e2e/utils"
 import { AppareilStatus, IAppareil } from "src/app/models/appareil.model"
 
 test.describe('Create a new appareil page', () => {
@@ -39,7 +39,7 @@ test.describe('Create a new appareil page', () => {
     const appareilLocator = page.locator("li").filter({
       hasText: new RegExp(newAppareil.name, "g")
     })
-    await isTurnOff({ appareil: newAppareil, appareilLocator })
+    await checkAppareilStatus({ appareil: newAppareil, appareilLocator, status: newAppareil.status })
   })
 
   test('should create a new appareil Turned on', async ({ page, baseURL }) => {

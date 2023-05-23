@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AppareilService } from '../services/appareil/appareil.service';
-import { IAppareil } from './../models/appareil.model';
+import { AppareilService } from '../../services/appareil/appareil.service';
+import { IAppareil } from 'src/app/models/appareil.model';
 
 @Component({
   selector: 'app-appareil-view',
@@ -27,6 +27,7 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
     }, 4000);
   }
   ngOnInit(): void {
+    this.onFetch()
     this.appareilsSubscription = this.appareilService.appareilSubject.subscribe(
       {
         next: (appareils) => {
@@ -44,5 +45,11 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
   }
   onSwitchOffAll = () => {
     this.appareilService.switchOffAll()
+  }
+  onSave = () => {
+    this.appareilService.saveAppareilsToServer()
+  }
+  onFetch = () => {
+    this.appareilService.getAppareilsFromServer()
   }
 }

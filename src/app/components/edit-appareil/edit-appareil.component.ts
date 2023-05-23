@@ -1,7 +1,7 @@
-import { AppareilService } from './../services/appareil/appareil.service';
+import { AppareilService } from '../../services/appareil/appareil.service';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AppareilStatus } from '../models/appareil.model';
+import { AppareilStatus } from '../../models/appareil.model';
 import { Router } from '@angular/router';
 
 @Component({

@@ -1,26 +1,34 @@
 
-import { expect, test } from '@playwright/test';
-import { appareilInitalText, appareilList, appareilTurnOffText, appareilTurnOnText } from 'e2e/data';
-import { CheckAppareilInfo, CheckDetailsLinkFunctionalityParams, PageInfo, RouterLinkParams, assertCurrentRouteNavLinkActive, checkAppareilStatus, checkDetailsLinkFunctionality, fillInput, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from 'e2e/utils';
-import { AppareilStatus } from 'src/app/models/appareil.model';
+import { APIRequestContext, Locator, expect, request, test } from '@playwright/test';
+import { appareilInitalText, appareilTurnOffText, appareilTurnOnText, appareilList } from 'e2e/data';
+import { CheckAppareilInfo, CheckDetailsLinkFunctionalityParams, PageInfo, RouterLinkParams, assertCurrentRouteNavLinkActive, checkAppareilStatus, checkDetailsLinkFunctionality, fillInput, getAppareil, getAppareilById, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from 'e2e/utils';
+import { AppareilStatus, IAppareil } from 'src/app/models/appareil.model';
 
 test.describe('home page tests', () => {
+  let apiContext: APIRequestContext;
 
-  test.beforeEach(async function ({ page, baseURL }) {
+  test.beforeEach(async function ({ page, baseURL, playwright, request }) {
     const pageInfo: PageInfo = { page, baseURL: baseURL || "" }
     await page.goto("/auth")
     await signIn(pageInfo)
     validatePageURL({ ...pageInfo, path: "" })
+    apiContext = await playwright.request.newContext({
+      baseURL: "https://http-client-demo-afd69-default-rtdb.europe-west1.firebasedatabase.app/appareils.json",
+      extraHTTPHeaders: {
+        "Accept": "application/json"
+      }
+    })
+    // Wait for appareil list to be fetch and rendered on DOM
+    await page.waitForSelector(".list-group-item")
   })
 
-  test("Should verify the initial state of all appareils", async ({ page }) => {
+  test("Should verify the initial state of all appareils", async ({ page, }) => {
     const homeLocator = page.getByTestId("home-wrapper")
+    const appareilList = await getAppareil(apiContext)
     const appareilLocator = homeLocator.locator("li")
-
     // check if every appareil is in the dom
     const appareilLocatorCount = await appareilLocator.count()
     expect(appareilLocatorCount).toEqual(appareilList.length)
-
     // check the style of each appareil
     for (let idx = 0; idx < appareilLocatorCount; idx++) {
       const appareil = appareilList[idx]
@@ -29,7 +37,7 @@ test.describe('home page tests', () => {
       const appareilLocator = homeLocator.locator("li")
       // current appareil locators
       const currentAppareil = appareilLocator.filter(
-        { hasText: new RegExp(`Appareil: ${name} -- Statut ${status}`) }
+        { hasText: new RegExp(`Appareil: ${appareil.name} -- Statut ${status}`) }
       )
       // check appareil Input value
       const currentAppareilInput = currentAppareil.locator(".form-control")
@@ -50,6 +58,7 @@ test.describe('home page tests', () => {
 
   test("should verify the initial state of an turn off appareil", async ({ page }) => {
     const idx = 1
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
     const { name, status } = appareil
     const appareilLocator = page.getByTestId("home-wrapper").locator("li").filter(
@@ -61,6 +70,7 @@ test.describe('home page tests', () => {
 
   test("should verify the initial state of an turn on appareil", async ({ page }) => {
     const idx = 0
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
     const { name, status } = appareil
     const appareilLocator = page.getByTestId("home-wrapper").locator("li").filter(
@@ -72,6 +82,7 @@ test.describe('home page tests', () => {
 
   test("should turn on an appareil", async ({ page }) => {
     const idx = 1
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item")
       .filter(
@@ -85,6 +96,7 @@ test.describe('home page tests', () => {
 
   test("should turn off an appareil", async ({ page }) => {
     const idx = 2
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
 
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").filter(
@@ -115,6 +127,7 @@ test.describe('home page tests', () => {
 
   test("should turn on and off one appareil", async ({ page }) => {
     const idx = 1
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").
       filter({
@@ -130,6 +143,7 @@ test.describe('home page tests', () => {
 
   test("should turn off and on one appareil", async ({ page }) => {
     const idx = 2
+    const appareilList = await getAppareil(apiContext)
     const appareil = appareilList[idx]
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").
       filter({
@@ -177,6 +191,8 @@ test.describe('home page tests', () => {
 
   test('should allow to edit appareil Name', async ({ page }) => {
     const idx = 1
+    console.log(await getAppareilById({ apiContext, id: idx }))
+    const appareilList = await getAppareil(apiContext)
     await fillInput({ appareil: appareilList[idx], page, newValue: "My new Ipad" })
   })
 })

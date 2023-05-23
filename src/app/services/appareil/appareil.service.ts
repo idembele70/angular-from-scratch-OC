@@ -1,28 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AppareilStatus, IAppareil } from '../../models/appareil.model';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppareilService {
   appareilSubject = new Subject<IAppareil[]>()
-  private appareils: IAppareil[] = [
-    {
-      id: 0,
-      name: 'Machine à laver',
-      status: AppareilStatus.ON
-    }, {
-      id: 1,
-      name: "Televions",
-      status: AppareilStatus.OFF
-    }, {
-      id: 2,
-      name: "Ordinateur",
-      status: AppareilStatus.ON
-    }
-  ]
-
+  private appareils: IAppareil[] = []
+  private firebasePath = "https://http-client-demo-afd69-default-rtdb.europe-west1.firebasedatabase.app/appareils.json"
+  constructor(private httpClient: HttpClient) { }
   emitAppareilSubject = () => {
     this.appareilSubject.next(this.appareils.slice())
   }
@@ -65,5 +53,30 @@ export class AppareilService {
     this.appareils.push({ ...newAppareil, id: Date.now() })
     this.emitAppareilSubject()
   }
-  constructor() { }
+  saveAppareilsToServer = () => {
+    this.httpClient.put<IAppareil>(this.firebasePath, this.appareils)
+      .subscribe(
+        {
+          next: (value) => {
+            console.log("Enregistrement terminé !")
+          },
+          error: (error) => {
+            console.log("Erreur lors de l'enregistrement !" + error)
+          }
+        }
+      )
+  }
+  getAppareilsFromServer = () => {
+    this.httpClient.get<IAppareil[]>(this.firebasePath).subscribe(
+      {
+        next: (response) => {
+          this.appareils = response
+          this.emitAppareilSubject()
+        },
+        error: (error) => {
+          console.log("Erreur de chargement: " + error)
+        }
+      }
+    )
+  }
 }

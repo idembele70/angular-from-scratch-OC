@@ -1,5 +1,5 @@
 
-import { Locator, Page, expect } from "@playwright/test";
+import { APIRequestContext, Locator, Page, expect } from "@playwright/test";
 import { AppareilStatus, IAppareil } from "src/app/models/appareil.model";
 import { RouterLinkParams, assertCurrentRouteNavLinkActive, isAppareilDetailsPage, navigateWithRouterLink } from "./index";
 
@@ -104,6 +104,8 @@ async function toggleAppareilStatus({ locator, innerText }: ToggleAppareilStatus
   await btn.click()
 }
 
+
+
 // used in mutiple files
 interface CheckDetailsLinkFunctionalityParams {
   parentLocator: Locator;
@@ -118,6 +120,8 @@ async function checkDetailsLinkFunctionality({ parentLocator, appareil, page }: 
   await assertCurrentRouteNavLinkActive(routerLinkOptions)
   await navigateWithRouterLink(routerLinkOptions)
 }
+
+
 
 export {
   checkAppareilStyles,

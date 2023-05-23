@@ -1,5 +1,5 @@
 
-import { Locator, Page, expect } from "@playwright/test"
+import { APIRequestContext, Locator, Page, expect } from "@playwright/test"
 import { IAppareil } from "src/app/models/appareil.model"
 
 // used in multiple files
@@ -53,11 +53,32 @@ const fillInput = async ({ page, appareil, newValue }: FillInputParams) => {
   await expect(appareilNameLocator).toContainText(newValue)
 }
 
+async function getAppareil(apiContext: APIRequestContext) {
+  const response = await apiContext.get("")
+  expect(response.ok()).toBeTruthy()
+  return await response.json() as IAppareil[]
+}
+interface GetAppareilByIdParams {
+  apiContext: APIRequestContext;
+  id: number;
+}
+async function getAppareilById({ apiContext, id }: GetAppareilByIdParams) {
+  const response = await apiContext.get("", {
+    params: {
+      "id": id
+    }
+  })
+  expect(response.ok()).toBeTruthy()
+  return await response.json() as IAppareil
+}
+
 export {
   URLValidationParams,
   validatePageURL,
   RouterLinkParams,
   navigateWithRouterLink,
   assertCurrentRouteNavLinkActive,
-  fillInput
+  fillInput,
+  getAppareil,
+  getAppareilById
 }

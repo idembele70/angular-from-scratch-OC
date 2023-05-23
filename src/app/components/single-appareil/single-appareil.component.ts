@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router, Routes } from '@angular/router';
-import { AppareilService } from './../services/appareil/appareil.service';
+import { AppareilService } from '../../services/appareil/appareil.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { AppareilStatus, IAppareil } from '../models/appareil.model';
-import { AppareilService } from '../services/appareil/appareil.service';
+import { AppareilStatus, IAppareil } from '../../models/appareil.model';
+import { AppareilService } from '../../services/appareil/appareil.service';
 
 @Component({
   selector: 'app-appareil',

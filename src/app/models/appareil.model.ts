@@ -2,9 +2,10 @@
 export interface IAppareil {
   id: number;
   name: string;
-  status: AppareilStatus
+  status: AppareilStatus;
+  firebaseId?: string;
 }
 export enum AppareilStatus {
-  OFF = "éteint",
-  ON = "allumé"
+  OFF = 'éteint',
+  ON = 'allumé',
 }

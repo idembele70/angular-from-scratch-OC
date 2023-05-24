@@ -6,50 +6,49 @@ import { IAppareil } from 'src/app/models/appareil.model';
 @Component({
   selector: 'app-appareil-view',
   templateUrl: './appareil-view.component.html',
-  styleUrls: ['./appareil-view.component.scss']
+  styleUrls: ['./appareil-view.component.scss'],
 })
 export class AppareilViewComponent implements OnInit, OnDestroy {
   isAuth = false;
   lastUpdate = new Promise((resolve, reject) => {
-    const date = new Date()
+    const date = new Date();
     setTimeout(() => {
-      resolve(date)
-    }, 2000)
-
-  })
+      resolve(date);
+    }, 2000);
+  });
   appareilsSubscription: Subscription;
   appareils: IAppareil[];
   constructor(private appareilService: AppareilService) {
-    this.appareilsSubscription = new Subscription()
-    this.appareils = []
+    this.appareilsSubscription = new Subscription();
+    this.appareils = [];
     setTimeout(() => {
-      this.isAuth = true
+      this.isAuth = true;
     }, 4000);
   }
   ngOnInit(): void {
-    this.onFetch()
+    this.onFetch();
     this.appareilsSubscription = this.appareilService.appareilSubject.subscribe(
       {
         next: (appareils) => {
-          this.appareils = appareils
-        }
+          this.appareils = appareils;
+        },
       }
-    )
-    this.appareilService.emitAppareilSubject()
+    );
+    this.appareilService.emitAppareilSubject();
   }
   ngOnDestroy(): void {
-    this.appareilsSubscription.unsubscribe()
+    this.appareilsSubscription.unsubscribe();
   }
   onSwitchOnAll = () => {
-    this.appareilService.switchOnAll()
-  }
+    this.appareilService.switchOnAll();
+  };
   onSwitchOffAll = () => {
-    this.appareilService.switchOffAll()
-  }
+    this.appareilService.switchOffAll();
+  };
   onSave = () => {
-    this.appareilService.saveAppareilsToServer()
-  }
+    this.appareilService.saveAllAppareilToServer();
+  };
   onFetch = () => {
-    this.appareilService.getAppareilsFromServer()
-  }
+    this.appareilService.getAllAppareilFromServer();
+  };
 }

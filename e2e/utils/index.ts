@@ -6,8 +6,8 @@ export {
   RouterLinkParams,
   fillInput,
   getAppareil,
-  getAppareilById,
-
+  getAppareilByIndex,
+  getAppareilNameText
 } from "./commons.utils"
 
 export {

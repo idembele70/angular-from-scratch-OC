@@ -1,8 +1,8 @@
+import { appareilList } from 'e2e/data';
 
-import { APIRequestContext, Locator, expect, request, test } from '@playwright/test';
-import { appareilInitalText, appareilTurnOffText, appareilTurnOnText, appareilList } from 'e2e/data';
-import { CheckAppareilInfo, CheckDetailsLinkFunctionalityParams, PageInfo, RouterLinkParams, assertCurrentRouteNavLinkActive, checkAppareilStatus, checkDetailsLinkFunctionality, fillInput, getAppareil, getAppareilById, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from 'e2e/utils';
-import { AppareilStatus, IAppareil } from 'src/app/models/appareil.model';
+import { APIRequestContext, expect, test } from '@playwright/test';
+import { CheckAppareilInfo, CheckDetailsLinkFunctionalityParams, PageInfo, RouterLinkParams, assertCurrentRouteNavLinkActive, checkAppareilStatus, checkDetailsLinkFunctionality, fillInput, getAppareil, getAppareilByIndex, getAppareilNameText, navigateWithRouterLink, signIn, toggleAppareilStatus, validatePageURL } from 'e2e/utils';
+import { AppareilStatus } from 'src/app/models/appareil.model';
 
 test.describe('home page tests', () => {
   let apiContext: APIRequestContext;
@@ -13,7 +13,7 @@ test.describe('home page tests', () => {
     await signIn(pageInfo)
     validatePageURL({ ...pageInfo, path: "" })
     apiContext = await playwright.request.newContext({
-      baseURL: "https://http-client-demo-afd69-default-rtdb.europe-west1.firebasedatabase.app/appareils.json",
+      baseURL: "https://http-client-demo-afd69-default-rtdb.europe-west1.firebasedatabase.app/",
       extraHTTPHeaders: {
         "Accept": "application/json"
       }
@@ -51,15 +51,15 @@ test.describe('home page tests', () => {
     }
     // check all appareils H4 text
     const appareilNameLocators = appareilLocator.locator("h4")
+    const appareilNameInitalText = await getAppareilNameText({ appareilList })
     await expect(appareilNameLocators).toHaveText(
-      appareilInitalText
+      appareilNameInitalText
     )
   })
 
   test("should verify the initial state of an turn off appareil", async ({ page }) => {
     const idx = 1
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
     const { name, status } = appareil
     const appareilLocator = page.getByTestId("home-wrapper").locator("li").filter(
       { hasText: new RegExp(`Appareil: ${name} -- Statut ${status}`) }
@@ -70,8 +70,7 @@ test.describe('home page tests', () => {
 
   test("should verify the initial state of an turn on appareil", async ({ page }) => {
     const idx = 0
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
     const { name, status } = appareil
     const appareilLocator = page.getByTestId("home-wrapper").locator("li").filter(
       { hasText: new RegExp(`Appareil: ${name} -- Statut ${status}`) }
@@ -82,8 +81,7 @@ test.describe('home page tests', () => {
 
   test("should turn on an appareil", async ({ page }) => {
     const idx = 1
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item")
       .filter(
         { hasText: new RegExp(`${appareil.name}`, "g") }
@@ -96,13 +94,12 @@ test.describe('home page tests', () => {
 
   test("should turn off an appareil", async ({ page }) => {
     const idx = 2
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
 
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").filter(
       { hasText: new RegExp(`${appareil.name}`, "g") }
     )
-    const checkappareilInfo: CheckAppareilInfo = { appareilLocator, appareil: appareil }
+    const checkappareilInfo: CheckAppareilInfo = { appareilLocator, appareil }
     await checkAppareilStatus({ ...checkappareilInfo, status: AppareilStatus.ON })
     await toggleAppareilStatus({ locator: appareilLocator, innerText: "Éteindre" })
     await checkAppareilStatus({ ...checkappareilInfo, status: AppareilStatus.OFF })
@@ -112,23 +109,28 @@ test.describe('home page tests', () => {
   test("should turn on all appareils", async ({ page }) => {
     const homeLocator = page.getByTestId("home-wrapper")
     const appareilName = homeLocator.locator(".list-group .list-group-item h4")
-    await expect(appareilName).toHaveText(appareilInitalText)
+    const appareilList = await getAppareil(apiContext)
+    const appareilNameInitalText = await getAppareilNameText({ appareilList })
+    await expect(appareilName).toHaveText(appareilNameInitalText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Allumer" })
-    await expect(appareilName).toHaveText(appareilTurnOnText)
+    const appareilNameTurnOnText = await getAppareilNameText({ appareilList, status: AppareilStatus.ON })
+    await expect(appareilName).toHaveText(appareilNameTurnOnText)
   })
 
   test("should turn off all appareils", async ({ page }) => {
     const homeLocator = page.getByTestId("home-wrapper")
     const appareilName = homeLocator.locator("li h4")
-    await expect(appareilName).toHaveText(appareilInitalText)
+    const appareilList = await getAppareil(apiContext)
+    const appareilNameInitalText = await getAppareilNameText({ appareilList })
+    await expect(appareilName).toHaveText(appareilNameInitalText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Éteindre" })
-    await expect(appareilName).toHaveText(appareilTurnOffText)
+    const appareilNameTurnOnText = await getAppareilNameText({ appareilList, status: AppareilStatus.OFF })
+    await expect(appareilName).toHaveText(appareilNameTurnOnText)
   })
 
   test("should turn on and off one appareil", async ({ page }) => {
     const idx = 1
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").
       filter({
         hasText: new RegExp(appareil.name)
@@ -143,8 +145,7 @@ test.describe('home page tests', () => {
 
   test("should turn off and on one appareil", async ({ page }) => {
     const idx = 2
-    const appareilList = await getAppareil(apiContext)
-    const appareil = appareilList[idx]
+    const appareil = await getAppareilByIndex({ apiContext, idx })
     const appareilLocator = page.getByTestId("home-wrapper").locator(".list-group .list-group-item").
       filter({
         hasText: new RegExp(appareil.name)
@@ -160,21 +161,29 @@ test.describe('home page tests', () => {
   test("should turn on and off all appareils", async ({ page }) => {
     const homeLocator = page.getByTestId("home-wrapper")
     const appareilName = homeLocator.locator(".list-group .list-group-item h4")
-    await expect(appareilName).toHaveText(appareilInitalText)
+    const appareilList = await getAppareil(apiContext)
+    const appareilNameInitalText = await getAppareilNameText({ appareilList })
+    await expect(appareilName).toHaveText(appareilNameInitalText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Allumer" })
-    await expect(appareilName).toHaveText(appareilTurnOnText)
+    const appareilNameTurnOnText = await getAppareilNameText({ appareilList, status: AppareilStatus.ON })
+    await expect(appareilName).toHaveText(appareilNameTurnOnText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Éteindre" })
-    await expect(appareilName).toHaveText(appareilTurnOffText)
+    const appareilNameTurnOffText = await getAppareilNameText({ appareilList, status: AppareilStatus.OFF })
+    await expect(appareilName).toHaveText(appareilNameTurnOffText)
   })
 
   test("should turn off and on all appareils", async ({ page }) => {
     const homeLocator = page.getByTestId("home-wrapper")
     const appareilName = homeLocator.locator("li h4")
-    await expect(appareilName).toHaveText(appareilInitalText)
+    const appareilList = await getAppareil(apiContext)
+    const appareilNameInitalText = await getAppareilNameText({ appareilList })
+    await expect(appareilName).toHaveText(appareilNameInitalText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Éteindre" })
-    await expect(appareilName).toHaveText(appareilTurnOffText)
+    const appareilNameTurnOffText = await getAppareilNameText({ appareilList, status: AppareilStatus.OFF })
+    await expect(appareilName).toHaveText(appareilNameTurnOffText)
     await toggleAppareilStatus({ locator: homeLocator, innerText: "Tout Allumer" })
-    await expect(appareilName).toHaveText(appareilTurnOnText)
+    const appareilNameTurnOnText = await getAppareilNameText({ appareilList, status: AppareilStatus.ON })
+    await expect(appareilName).toHaveText(appareilNameTurnOnText)
   })
 
   test('should verify if home nav link is active', async ({ page }) => {
@@ -191,9 +200,8 @@ test.describe('home page tests', () => {
 
   test('should allow to edit appareil Name', async ({ page }) => {
     const idx = 1
-    console.log(await getAppareilById({ apiContext, id: idx }))
-    const appareilList = await getAppareil(apiContext)
-    await fillInput({ appareil: appareilList[idx], page, newValue: "My new Ipad" })
+    const appareil = await getAppareilByIndex({ apiContext, idx })
+    await fillInput({ appareil, page, newValue: "My new Ipad" })
   })
 })
 

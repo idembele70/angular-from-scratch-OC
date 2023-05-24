@@ -14,20 +14,16 @@ test.describe('Create a new appareil page', () => {
 
   test('should verify the inital state of the page', async ({ page }) => {
     const wrapperLocator = page.getByTestId("edit-appareil-wrapper")
-    const isNameLabelVisible = await wrapperLocator.locator("label")
+    const nameLabel = wrapperLocator.locator("label")
       .getByText("Nom de l'appareil")
-      .isVisible()
-    expect(isNameLabelVisible).toBeTruthy()
-    const nameInput = wrapperLocator.locator("input#name")
-    const isNameInputEmpty = await nameInput.inputValue() === ""
-    expect(isNameInputEmpty).toBeTruthy()
-    const isStatusLabelVisible = await wrapperLocator.locator("label")
+    await expect(nameLabel).toBeVisible()
+    const nameInputValue = await wrapperLocator.locator("input#name").inputValue()
+    expect(nameInputValue).toEqual("")
+    const statusLabel = wrapperLocator.locator("label")
       .getByText("Etat de l'appareil")
-      .isVisible()
-    expect(isStatusLabelVisible).toBeTruthy()
-    const statusSelectedOption = wrapperLocator.locator("select")
-    const isOffByDefault = await statusSelectedOption.inputValue() === AppareilStatus.OFF
-    expect(isOffByDefault).toBeTruthy()
+    await expect(statusLabel).toBeVisible()
+    const statusSelectedOption = await wrapperLocator.locator("select").inputValue()
+    expect(statusSelectedOption).toEqual(AppareilStatus.OFF)
     const btn = wrapperLocator.locator("button")
     await expect(btn).toBeDisabled()
 

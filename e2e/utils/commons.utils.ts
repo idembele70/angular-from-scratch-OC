@@ -1,6 +1,7 @@
+import { appareilList } from 'e2e/data';
 
 import { APIRequestContext, Locator, Page, expect } from "@playwright/test"
-import { IAppareil } from "src/app/models/appareil.model"
+import { AppareilStatus, IAppareil } from "src/app/models/appareil.model"
 
 // used in multiple files
 interface URLValidationParams {
@@ -54,22 +55,30 @@ const fillInput = async ({ page, appareil, newValue }: FillInputParams) => {
 }
 
 async function getAppareil(apiContext: APIRequestContext) {
-  const response = await apiContext.get("")
+  const response = await apiContext.get("appareils.json")
   expect(response.ok()).toBeTruthy()
   return await response.json() as IAppareil[]
 }
 interface GetAppareilByIdParams {
   apiContext: APIRequestContext;
-  id: number;
+  idx: number;
 }
-async function getAppareilById({ apiContext, id }: GetAppareilByIdParams) {
-  const response = await apiContext.get("", {
-    params: {
-      "id": id
-    }
-  })
+async function getAppareilByIndex({ apiContext, idx }: GetAppareilByIdParams) {
+  const response = await apiContext.get("appareils/" + idx + ".json")
   expect(response.ok()).toBeTruthy()
   return await response.json() as IAppareil
+}
+interface GetAppareilNameText {
+  appareilList: IAppareil[],
+  status?: AppareilStatus
+}
+async function getAppareilNameText({ appareilList, status }: GetAppareilNameText) {
+  return appareilList.map(
+    ({ name, status: appareilStatus }) => {
+      const currentStatus: AppareilStatus = !status ? appareilStatus : status
+      return `Appareil: ${name} -- Statut ${currentStatus}`
+    }
+  )
 }
 
 export {
@@ -80,5 +89,6 @@ export {
   assertCurrentRouteNavLinkActive,
   fillInput,
   getAppareil,
-  getAppareilById
+  getAppareilByIndex,
+  getAppareilNameText
 }

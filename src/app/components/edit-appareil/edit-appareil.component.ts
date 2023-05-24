@@ -18,17 +18,20 @@ export class EditAppareilComponent {
   ) {
     this.defaultOnOff = AppareilStatus.OFF;
   }
-  onSubmit = (formData: NgForm) => {
+  onSubmit = async (formData: NgForm) => {
     const name = formData.value['name'] as string;
     const status = formData.value['status'] as AppareilStatus;
-    const existingAppareil = this.appareilService.getOneAppareilFromServer({
-      name,
-    });
-    // existingAppareil.then((v) => console.log(v));
-    //if (!existingAppareil)
-    //  this.appareilService.addAppareil({
-    //    status, name, id: Date.now()
-    //  })
-    // this.router.navigate(["/appareils"])
+    const existingAppareil =
+      await this.appareilService.getOneAppareilFromServer({
+        name,
+      });
+    if (!Object.keys(existingAppareil).length) {
+      this.appareilService.saveOneAppareilToServer({
+        status,
+        name,
+        id: Date.now(),
+      });
+      this.router.navigate(['/appareils']);
+    }
   };
 }

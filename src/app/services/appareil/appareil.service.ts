@@ -47,11 +47,6 @@ export class AppareilService {
     return this.appareils.find((appareil) => appareil.id === id);
   }
 
-  addAppareil(newAppareil: IAppareil) {
-    this.appareils.push({ ...newAppareil, id: Date.now() });
-    this.emitAppareilSubject();
-  }
-
   saveAllAppareilToServer = () => {
     const appareilToSave: Record<string, IAppareil> = {};
     this.appareils.forEach((appareil) => {
@@ -87,7 +82,8 @@ export class AppareilService {
       })
       .subscribe({
         next: (value) => {
-          console.log('Enregistrement terminé !');
+          console.log('Enregistrement du nouvelle appareil terminer !');
+          this.emitAppareilSubject();
         },
         error: (error) => {
           console.log("Erreur lors de l'enregistrement !" + error);
@@ -111,7 +107,11 @@ export class AppareilService {
     });
   };
 
-  getOneAppareilFromServer = ({ name, id, status }: Partial<IAppareil>) => {
+  getOneAppareilFromServer = async ({
+    name,
+    id,
+    status,
+  }: Partial<IAppareil>) => {
     const queryParams: string[] = [];
     if (name !== undefined)
       queryParams.push(`orderBy="name"&equalTo="${name}"`);
@@ -122,11 +122,10 @@ export class AppareilService {
 
     if (!queryParams.length)
       return "Je n'ai trouvé aucun appareil sur la base de données.";
-    return this.httpClient
-      .get<IAppareil[]>(`${this.firebasePath}/${queryParams.join('&')}.json`)
-      .subscribe({
-        next: (v) => v,
-      });
+    const existingAppareil$ = this.httpClient.get<IAppareil>(
+      `${this.firebasePath}.json?${queryParams.join('&')}`
+    );
+    return await firstValueFrom(existingAppareil$);
   };
   //error: (error) => console.log('erreur lors de la recherche', error),
 }

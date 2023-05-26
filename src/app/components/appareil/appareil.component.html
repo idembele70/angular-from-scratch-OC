@@ -10,5 +10,6 @@
   <input type="text" class="form-control" [(ngModel)]="appareil.name">
   <a [routerLink]="'/appareils/' + [appareil.id]">détails</a>
   <button class="btn btn-success" (click)="onSwitchOnOne()" [disabled]="appareil.status === 'allumé'">Allumer</button>
-  <button class="btn btn-danger" (click)="onSwitchOffOne()" [disabled]="appareil.status === 'éteint'">Éteindre</button>
+  <button class="btn btn-primary" (click)="onSwitchOffOne()" [disabled]="appareil.status === 'éteint'">Éteindre</button>
+  <button class="btn btn-danger" (click)="onDeleteOneAppareil()">Supprimer</button>
 </li>

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AppareilStatus, IAppareil } from '../../models/appareil.model';
-import { Subject, first, firstValueFrom, map, take } from 'rxjs';
+import { Subject, first, firstValueFrom, map, of, take } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -74,21 +75,15 @@ export class AppareilService {
   };
 
   saveOneAppareilToServer = (appareil: IAppareil) => {
-    this.httpClient
-      .post<IAppareil>(`${this.firebasePath}.json`, appareil, {
+    return this.httpClient.post<IAppareil>(
+      `${this.firebasePath}.json`,
+      appareil,
+      {
         headers: {
           'Content-Type': 'application/json',
         },
-      })
-      .subscribe({
-        next: (value) => {
-          console.log('Enregistrement du nouvelle appareil terminer !');
-          this.emitAppareilSubject();
-        },
-        error: (error) => {
-          console.log("Erreur lors de l'enregistrement !" + error);
-        },
-      });
+      }
+    );
   };
 
   getAllAppareilFromServer = () => {
@@ -107,11 +102,7 @@ export class AppareilService {
     });
   };
 
-  getOneAppareilFromServer = async ({
-    name,
-    id,
-    status,
-  }: Partial<IAppareil>) => {
+  getOneAppareilFromServer = ({ name, id, status }: Partial<IAppareil>) => {
     const queryParams: string[] = [];
     if (name !== undefined)
       queryParams.push(`orderBy="name"&equalTo="${name}"`);
@@ -121,11 +112,22 @@ export class AppareilService {
       queryParams.push(`orderBy='status'&equalTo='${status}'`);
 
     if (!queryParams.length)
-      return "Je n'ai trouvé aucun appareil sur la base de données.";
-    const existingAppareil$ = this.httpClient.get<IAppareil>(
+      return of("Je n'ai trouvé aucun appareil sur la base de données.");
+    return this.httpClient.get<IAppareil>(
       `${this.firebasePath}.json?${queryParams.join('&')}`
     );
-    return await firstValueFrom(existingAppareil$);
   };
-  //error: (error) => console.log('erreur lors de la recherche', error),
+
+  deleteOneAppareilFromServer = (id: number) => {
+    return this.httpClient.delete(
+      `${this.firebasePath}?orderBy="id"&equalTo=${id}`
+    );
+  };
+
+  updateOneAppareil = (id: number, data: Omit<IAppareil, ''>) => {
+    return this.httpClient.put(
+      `${this.firebasePath}?orderBy="id"&equalTo=${id}`,
+      data
+    );
+  };
 }

@@ -1,11 +1,15 @@
 // used on test files
-export interface IAppareil {
+interface IAppareil {
   id: number;
   name: string;
   status: AppareilStatus;
   firebaseId?: string;
 }
-export enum AppareilStatus {
+enum AppareilStatus {
   OFF = 'éteint',
   ON = 'allumé',
 }
+
+type ToggleStatus = 'ON' | 'OFF';
+
+export { IAppareil, AppareilStatus, ToggleStatus };

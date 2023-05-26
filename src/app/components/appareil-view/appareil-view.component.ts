@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppareilService } from '../../services/appareil/appareil.service';
-import { IAppareil } from 'src/app/models/appareil.model';
+import { IAppareil, ToggleStatus } from 'src/app/models/appareil.model';
 
 @Component({
   selector: 'app-appareil-view',
@@ -9,16 +9,18 @@ import { IAppareil } from 'src/app/models/appareil.model';
   styleUrls: ['./appareil-view.component.scss'],
 })
 export class AppareilViewComponent implements OnInit, OnDestroy {
-  isAuth = false;
-  lastUpdate = new Promise((resolve, reject) => {
-    const date = new Date();
-    setTimeout(() => {
-      resolve(date);
-    }, 2000);
-  });
+  isAuth: boolean;
+  lastUpdate: Promise<Date>;
   appareilsSubscription: Subscription;
   appareils: IAppareil[];
   constructor(private appareilService: AppareilService) {
+    this.isAuth = false;
+    this.lastUpdate = new Promise((resolve) => {
+      const date = new Date();
+      setTimeout(() => {
+        resolve(date);
+      }, 2000);
+    });
     this.appareilsSubscription = new Subscription();
     this.appareils = [];
     setTimeout(() => {
@@ -26,7 +28,7 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
     }, 4000);
   }
   ngOnInit(): void {
-    this.onFetch();
+    this.appareilService.getAllAppareilFromServer();
     this.appareilsSubscription = this.appareilService.appareilSubject.subscribe(
       {
         next: (appareils) => {
@@ -39,16 +41,18 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.appareilsSubscription.unsubscribe();
   }
-  onSwitchOnAll = () => {
-    this.appareilService.switchOnAll();
-  };
-  onSwitchOffAll = () => {
-    this.appareilService.switchOffAll();
-  };
-  onSave = () => {
+  onToggleAllStatus = (status: ToggleStatus) => {
+    switch (status) {
+      case 'ON':
+        this.appareilService.switchOnAll();
+        break;
+      case 'OFF':
+        this.appareilService.switchOffAll();
+        break;
+      default:
+        console.error("Le status fournis n'existe pas.");
+        break;
+    }
     this.appareilService.saveAllAppareilToServer();
-  };
-  onFetch = () => {
-    this.appareilService.getAllAppareilFromServer();
   };
 }

@@ -118,16 +118,14 @@ export class AppareilService {
     );
   };
 
-  deleteOneAppareilFromServer = (id: number) => {
-    return this.httpClient.delete(
-      `${this.firebasePath}?orderBy="id"&equalTo=${id}`
-    );
+  deleteOneAppareilFromServer = (firebaseId: string) => {
+    return this.httpClient.delete(`${this.firebasePath}/${firebaseId}.json`);
   };
 
-  updateOneAppareil = (id: number, data: Omit<IAppareil, ''>) => {
-    return this.httpClient.put(
-      `${this.firebasePath}?orderBy="id"&equalTo=${id}`,
-      data
-    );
+  updateOneAppareil = (
+    firebaseId: string,
+    data: Omit<IAppareil, 'firebaseId'>
+  ) => {
+    return this.httpClient.put(`${this.firebasePath}/${firebaseId}.json`, data);
   };
 }

@@ -4,8 +4,6 @@
   <ul class="list-group">
     <app-appareil *ngFor="let appareil of appareils; let i = index;" [appareil]="appareil"></app-appareil>
   </ul>
-  <button class="btn btn-success" (click)="onSwitchOnAll()">Tout Allumer</button>
-  <button class="btn btn-danger" (click)="onSwitchOffAll()">Tout Éteindre</button>
-  <button class="btn btn-primary" (click)="onSave()">Enregistrer</button>
-  <button class="btn btn-primary" (click)="onFetch()">Charger</button>
+  <button class="btn btn-success" (click)="onToggleAllStatus('ON')">Tout Allumer</button>
+  <button class="btn btn-danger" (click)="onToggleAllStatus('OFF')">Tout Éteindre</button>
 </div>

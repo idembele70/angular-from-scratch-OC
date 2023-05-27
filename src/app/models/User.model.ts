@@ -1,14 +1,13 @@
-type DrinkPreference = "coca" | "pepsi"
-
-class User {
-  constructor(public firstName: string, public lastName: string,
-    public email: string, public drinkPreference: DrinkPreference,
-    public hobbies?: string[]
-  ) {
-
-  }
+type Gender = 'male' | 'female';
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  gender: Gender;
 }
 
-export {
-  User
-}
+type SignInCredentials = Pick<User, 'email' | 'password'>;
+type UserWithoutPassword = Omit<User, 'password'>;
+
+export { User, Gender, UserWithoutPassword, SignInCredentials };

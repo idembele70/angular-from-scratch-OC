@@ -1,0 +1,37 @@
+<div data-testid="sign-in-wrapper">
+  <h2>Connexion</h2>
+  <div class="col-xs-6">
+    <form [formGroup]="userForm" (ngSubmit)="onSignIn()">
+      <div class="form-group">
+        <label for="email">email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          class="form-control"
+          formControlName="email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="mot de passe"
+          class="form-control"
+          formControlName="password"
+        />
+      </div>
+      <button
+        type="submit"
+        [disabled]="userForm.invalid"
+        class="btn btn-success"
+      >
+        Se connecter
+      </button>
+    </form>
+    <a routerLink="/sign-up" class="btn btn-primary show sign-btn">
+      Je veux me m'inscrire
+    </a>
+  </div>
+</div>

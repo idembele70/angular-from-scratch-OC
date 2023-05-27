@@ -5,24 +5,28 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss']
+  styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent {
-  authStatus: boolean
+  authStatus: boolean;
+  isSignIn: boolean;
   constructor(private authService: AuthService, private router: Router) {
-    this.authStatus = authService.isAuth
+    this.authStatus = authService.isAuth;
+    this.isSignIn = false;
   }
 
   onSignIn = () => {
-    this.authService.signIn().then(
-      isAuth => {
-        this.authStatus = isAuth
-        this.router.navigate([""])
-      }
-    )
-  }
+    this.authService.signIn().then((isAuth) => {
+      this.authStatus = isAuth;
+      this.router.navigate(['']);
+    });
+  };
   onSignOut = () => {
-    this.authService.signOut()
-    this.authStatus = this.authService.isAuth
-  }
+    this.authService.signOut();
+    this.authStatus = this.authService.isAuth;
+  };
+  onNavigate = () => {
+    this.isSignIn = !this.isSignIn;
+  };
+  onSubmit = () => {};
 }

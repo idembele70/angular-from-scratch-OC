@@ -102,17 +102,11 @@ export class AppareilService {
     });
   };
 
-  getOneAppareilFromServer = ({ name, id, status }: Partial<IAppareil>) => {
+  getOneAppareilFromServer = ({ name, id }: Partial<IAppareil>) => {
     const queryParams: string[] = [];
     if (name !== undefined)
       queryParams.push(`orderBy="name"&equalTo="${name}"`);
     if (id !== undefined) queryParams.push(`orderBy='id'&equalTo='${id}'`);
-
-    if (status !== undefined)
-      queryParams.push(`orderBy='status'&equalTo='${status}'`);
-
-    if (!queryParams.length)
-      return of("Je n'ai trouvé aucun appareil sur la base de données.");
     return this.httpClient.get<IAppareil>(
       `${this.firebasePath}.json?${queryParams.join('&')}`
     );

@@ -4,7 +4,14 @@ import { NgForm } from '@angular/forms';
 import { AppareilStatus, IAppareil } from '../../models/appareil.model';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription, forkJoin, mergeMap, of } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  forkJoin,
+  mergeMap,
+  of,
+  switchMap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-edit-appareil',
@@ -31,11 +38,10 @@ export class EditAppareilComponent implements OnDestroy {
       name,
       id: Date.now(),
     };
-    this.newAppareilSubscription = forkJoin([
-      this.appareilService.getOneAppareilFromServer({ name }),
-    ])
+    this.newAppareilSubscription = this.appareilService
+      .getOneAppareilFromServer({ name })
       .pipe(
-        mergeMap(([existingAppareil]) => {
+        mergeMap((existingAppareil) => {
           if (Object.keys(existingAppareil).length === 0) {
             return this.appareilService.saveOneAppareilToServer(newAppareil);
           }
@@ -47,8 +53,7 @@ export class EditAppareilComponent implements OnDestroy {
           if (v !== this.existingAppareilMsg) {
             console.log('Enregistrement du nouvelle appareil terminer !');
             this.router.navigate(['/appareils']);
-          }
-          console.log('Cette appareil existe dèjà !');
+          } else console.log('Cette appareil existe dèjà !');
         },
         error: (error) => {
           console.log("Erreur lors de l'enregistrement !" + error);

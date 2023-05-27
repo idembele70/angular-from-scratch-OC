@@ -1,5 +1,24 @@
 <div data-testid="auth-wrapper">
-  <h2>Authentification</h2>
-  <button class="btn btn-success" *ngIf="!authStatus" (click)="onSignIn()">Se connecter</button>
-  <button class="btn btn-danger" *ngIf="authStatus" (click)="onSignOut()">Se deconnecter</button>
+  <h2>{{isSignIn ? "Connexion" : "Inscription"}}</h2>
+  <div class="col-xs-6">
+    <form>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input autocomplete="off" type="text" name="username" placeholder="Nom d'utilisateur" class="form-control">
+      </div>
+      <div class="form-group" [ngClass]="{'hidden':isSignIn}">
+        <label for="email">email</label>
+        <input type="email" name="email" placeholder="Email" class="form-control" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" placeholder="mot de passe" class="form-control">
+      </div>
+
+    </form>
+    <button class="btn btn-success" *ngIf="!authStatus" (click)="onSignIn()">Se connecter</button>
+    <button class="btn btn-danger" *ngIf="authStatus" (click)="onSignOut()">Se deconnecter</button>
+    <button (click)="onNavigate()" class="btn btn-primary show sign-btn">Je veux me {{ isSignIn ? "Connecter":
+      "m'inscrire"}}</button>
+  </div>
 </div>

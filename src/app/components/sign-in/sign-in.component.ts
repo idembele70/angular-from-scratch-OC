@@ -1,5 +1,10 @@
 import { Router } from '@angular/router';
-import { SignInCredentials } from 'src/app/models/User.model';
+import {
+  SignInCredentials,
+  User,
+  UserPartialPassword,
+  UserWithoutPassword,
+} from 'src/app/models/User.model';
 import { UserService } from 'src/app/services/user/user.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -14,6 +19,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class SignInComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   signInSubscription: Subscription;
+  loginStart: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -22,6 +28,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   ) {
     this.userForm = new FormGroup({});
     this.signInSubscription = new Subscription();
+    this.loginStart = false;
   }
   ngOnInit(): void {
     this.initForm();
@@ -37,16 +44,21 @@ export class SignInComponent implements OnInit, OnDestroy {
   };
   onSignIn = () => {
     const FormValue: SignInCredentials = this.userForm.value;
+    this.loginStart = true;
     this.signInSubscription = this.userService
       .getOneUser(FormValue.email)
       .subscribe({
         next: (user) => {
-          if (Object.keys(user).length) this.authService.isAuth = true;
-          this.router.navigate(['appareils']);
+          if (Object.keys(user).length) {
+            const userCredentials: UserPartialPassword = Object.values(user)[0];
+            delete userCredentials.password;
+            this.authService.signIn(userCredentials);
+          }
         },
         error(err) {
           console.error('Erreur lors de la connexion !', err);
         },
       });
+    this.loginStart = false;
   };
 }

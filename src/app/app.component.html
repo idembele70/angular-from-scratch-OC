@@ -13,8 +13,10 @@
       </li>
       <li routerLinkActive="active"><a routerLink="users">Utilisateurs</a></li>
     </ul>
-    <div class="navbar-right">
-      <p>Vous êtes connecté depuis {{ secondes }} secondes !</p>
+    <div class="navbar-right" [ngClass]="{ 'hidden': !isAuth }">
+      <button class="btn btn-danger" (click)="onSignOut()">
+        Se deconnecter
+      </button>
     </div>
   </div>
 </div>

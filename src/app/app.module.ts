@@ -7,7 +7,6 @@ import { MonPremierComponent } from './components/mon-premier/mon-premier.compon
 import { AppareilComponent } from './components/appareil/appareil.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppareilService } from './services/appareil/appareil.service';
-import { AuthComponent } from './components/auth/auth.component';
 import { AppareilViewComponent } from './components/appareil-view/appareil-view.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from './services/auth/auth.service';
@@ -69,7 +68,6 @@ const appRoutes: Routes = [
     AppComponent,
     MonPremierComponent,
     AppareilComponent,
-    AuthComponent,
     AppareilViewComponent,
     SingleAppareilComponent,
     FourOhFourComponent,

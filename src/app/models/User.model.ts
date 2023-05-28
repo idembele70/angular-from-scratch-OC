@@ -9,5 +9,15 @@ interface User {
 
 type SignInCredentials = Pick<User, 'email' | 'password'>;
 type UserWithoutPassword = Omit<User, 'password'>;
+type UserPartialPassword = Partial<Pick<User, 'password'>> &
+  Omit<User, 'password'>;
+type LoggedUser = UserWithoutPassword & { tokenExp: number };
 
-export { User, Gender, UserWithoutPassword, SignInCredentials };
+export {
+  User,
+  Gender,
+  UserWithoutPassword,
+  SignInCredentials,
+  LoggedUser,
+  UserPartialPassword,
+};

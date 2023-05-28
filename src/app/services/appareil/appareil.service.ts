@@ -21,8 +21,8 @@ export class AppareilService {
   switchOnAll = () => {
     for (const appareil of this.appareils) {
       appareil.status = AppareilStatus.ON;
-      this.emitAppareilSubject();
     }
+    this.emitAppareilSubject();
   };
 
   switchOffAll = () => {
@@ -67,7 +67,7 @@ export class AppareilService {
         },
       })
       .subscribe({
-        next: (value) => {
+        next: () => {
           console.log('Enregistrement terminé !');
         },
         error: (error) => {

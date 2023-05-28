@@ -13,36 +13,53 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from './services/auth/auth.service';
 import { SingleAppareilComponent } from './components/single-appareil/single-appareil.component';
 import { FourOhFourComponent } from './components/four-oh-four/four-oh-four.component';
-import {
-  AuthGuardService,
-  AuthGuard,
-} from './services/auth-guard/auth-guard.service';
+
 import { EditAppareilComponent } from './components/edit-appareil/edit-appareil.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserService } from './services/user/user.service';
 import { NewUserComponent } from './components/new-user/new-user.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
+import { authGuard } from './guard/auth/auth.guard';
+import { notAuthGuard } from './guard/not-auth/not-auth.guard';
 
 const appRoutes: Routes = [
-  { path: '', canActivate: [AuthGuard], component: AppareilViewComponent },
   {
     path: 'appareils',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     component: AppareilViewComponent,
   },
   {
     path: 'appareils/:id',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     component: SingleAppareilComponent,
   },
-  { path: 'edit', canActivate: [AuthGuard], component: EditAppareilComponent },
-  { path: 'auth', component: AuthComponent },
-  { path: 'sign-up', component: SignUpComponent },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'users', component: UserListComponent },
-  { path: 'new-user', component: NewUserComponent },
-  { path: 'users/:id', canActivate: [AuthGuard], component: UserListComponent },
+  {
+    path: 'edit',
+    canActivate: [authGuard],
+    component: EditAppareilComponent,
+  },
+  {
+    path: 'sign-up',
+    canActivate: [notAuthGuard],
+    component: SignUpComponent,
+  },
+  {
+    path: 'sign-in',
+    canActivate: [notAuthGuard],
+    component: SignInComponent,
+  },
+  { path: 'users', canActivate: [authGuard], component: UserListComponent },
+  {
+    path: 'new-user',
+    canActivate: [authGuard],
+    component: NewUserComponent,
+  },
+  {
+    path: 'users/:id',
+    canActivate: [authGuard],
+    component: UserListComponent,
+  },
   { path: 'not-found', component: FourOhFourComponent },
   { path: '**', redirectTo: '/not-found' },
 ];
@@ -70,7 +87,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(appRoutes),
   ],
-  providers: [AppareilService, AuthService, AuthGuardService, UserService],
+  providers: [AppareilService, AuthService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

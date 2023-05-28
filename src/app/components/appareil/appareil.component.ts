@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import {
   AppareilStatus,
   IAppareil,
@@ -14,8 +20,11 @@ import { Subscription } from 'rxjs';
 })
 export class AppareilComponent implements OnDestroy {
   @Input() appareil: IAppareil;
+  @Output() deleteAppareil = new EventEmitter<unknown>();
+
   deletedAppareilSubscription: Subscription;
   updatedAppareilSubscription: Subscription;
+
   constructor(private appareilService: AppareilService) {
     this.deletedAppareilSubscription = new Subscription();
     this.updatedAppareilSubscription = new Subscription();
@@ -31,18 +40,19 @@ export class AppareilComponent implements OnDestroy {
     this.updatedAppareilSubscription.unsubscribe();
     this.deletedAppareilSubscription.unsubscribe();
   }
-  /**
-   * getStatus
-   */
+
   public getStatus() {
     return this.appareil.status;
   }
+
   public getColor() {
     return this.appareil.status === AppareilStatus.OFF ? 'red' : 'green';
   }
+
   getListOffStatus = () => {
     return this.appareil.status === AppareilStatus.OFF;
   };
+
   getListOnStatus = () => {
     return this.appareil.status === AppareilStatus.ON;
   };
@@ -56,17 +66,21 @@ export class AppareilComponent implements OnDestroy {
         this.appareilService.switchOff(this.appareil.id);
         break;
       default:
-        console.error("Le status fournis n'existe pas.");
+        console.error("Le status fourni n'existe pas.");
         break;
     }
     this.onUpdateAppareil();
   };
+
   onDeleteOneAppareil = () => {
     if (this.appareil.firebaseId)
       this.deletedAppareilSubscription = this.appareilService
         .deleteOneAppareilFromServer(this.appareil.firebaseId)
         .subscribe({
-          next: () => console.log('Appareil Supprimé.'),
+          next: () => {
+            console.log('Appareil supprimé.');
+            this.deleteAppareil.emit();
+          },
           error: (err) => console.error('Erreur lors de la suppression.', err),
         });
   };
@@ -80,9 +94,9 @@ export class AppareilComponent implements OnDestroy {
           status: this.appareil.status,
         })
         .subscribe({
-          next: () => console.log('Appareil mise à jour.'),
+          next: () => console.log('Appareil mis à jour.'),
           error: (err) => console.error('Erreur lors de la mise à jour.', err),
         });
-    else console.log("Le champs 'firebaseId' est undefini.");
+    else console.log("Le champ 'firebaseId' est undefined.");
   };
 }

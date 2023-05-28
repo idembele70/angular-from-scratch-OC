@@ -1,8 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { AppareilStatus, IAppareil } from '../../models/appareil.model';
-import { Subject, first, firstValueFrom, map, of, take } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,9 @@ export class AppareilService {
   private appareils: IAppareil[] = [];
   private firebasePath =
     'https://http-client-demo-afd69-default-rtdb.europe-west1.firebasedatabase.app/appareils';
+
   constructor(private httpClient: HttpClient) {}
+
   emitAppareilSubject = () => {
     this.appareilSubject.next(this.appareils.slice());
   };
@@ -37,6 +38,7 @@ export class AppareilService {
     }
     this.emitAppareilSubject();
   };
+
   switchOff = (id: number) => {
     for (let appareil of this.appareils) {
       if (appareil.id === id) appareil.status = AppareilStatus.OFF;
@@ -106,9 +108,9 @@ export class AppareilService {
     const queryParams: string[] = [];
     if (name !== undefined)
       queryParams.push(`orderBy="name"&equalTo="${name}"`);
-    if (id !== undefined) queryParams.push(`orderBy='id'&equalTo='${id}'`);
+    else if (id !== undefined) queryParams.push(`orderBy='id'&equalTo='${id}'`);
     return this.httpClient.get<IAppareil>(
-      `${this.firebasePath}.json?${queryParams.join('&')}`
+      `${this.firebasePath}.json?${queryParams.join()}`
     );
   };
 

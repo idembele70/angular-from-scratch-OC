@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AppareilService } from '../../services/appareil/appareil.service';
 import { IAppareil, ToggleStatus } from 'src/app/models/appareil.model';
+import { AppareilService } from '../../services/appareil/appareil.service';
 
 @Component({
   selector: 'app-appareil-view',
@@ -9,12 +9,12 @@ import { IAppareil, ToggleStatus } from 'src/app/models/appareil.model';
   styleUrls: ['./appareil-view.component.scss'],
 })
 export class AppareilViewComponent implements OnInit, OnDestroy {
-  isAuth: boolean;
+  isAuth: boolean = false;
   lastUpdate: Promise<Date>;
   appareilsSubscription: Subscription;
-  appareils: IAppareil[];
+  appareils: IAppareil[] = [];
+
   constructor(private appareilService: AppareilService) {
-    this.isAuth = false;
     this.lastUpdate = new Promise((resolve) => {
       const date = new Date();
       setTimeout(() => {
@@ -22,25 +22,33 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
       }, 2000);
     });
     this.appareilsSubscription = new Subscription();
-    this.appareils = [];
     setTimeout(() => {
       this.isAuth = true;
-    }, 4000);
+    }, 1000);
   }
+
   ngOnInit(): void {
     this.appareilService.getAllAppareilFromServer();
     this.appareilsSubscription = this.appareilService.appareilSubject.subscribe(
       {
-        next: (appareils) => {
+        next: (appareils: IAppareil[]) => {
           this.appareils = appareils;
+        },
+        error: (err) => {
+          console.error(
+            "Une erreur s'est produite lors de la souscription à appareilSubject :",
+            err
+          );
         },
       }
     );
     this.appareilService.emitAppareilSubject();
   }
+
   ngOnDestroy(): void {
     this.appareilsSubscription.unsubscribe();
   }
+
   onToggleAllStatus = (status: ToggleStatus) => {
     switch (status) {
       case 'ON':
@@ -54,5 +62,9 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
         break;
     }
     this.appareilService.saveAllAppareilToServer();
+  };
+
+  onDeleteOneAppareil = () => {
+    this.appareilService.getAllAppareilFromServer();
   };
 }

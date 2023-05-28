@@ -1,9 +1,17 @@
 <div data-testid="home-wrapper" class="col-xs-12">
   <h2>Mes appareils</h2>
-  <p>Mis à jour : {{lastUpdate | async }}</p>
+  <p>Mis à jour : {{ lastUpdate | async }}</p>
   <ul class="list-group">
-    <app-appareil *ngFor="let appareil of appareils; let i = index;" [appareil]="appareil"></app-appareil>
+    <app-appareil
+      (deleteAppareil)="onDeleteOneAppareil()"
+      *ngFor="let appareil of appareils; let i = index"
+      [appareil]="appareil"
+    ></app-appareil>
   </ul>
-  <button class="btn btn-success" (click)="onToggleAllStatus('ON')">Tout Allumer</button>
-  <button class="btn btn-danger" (click)="onToggleAllStatus('OFF')">Tout Éteindre</button>
+  <button class="btn btn-success" (click)="onToggleAllStatus('ON')">
+    Tout Allumer
+  </button>
+  <button class="btn btn-danger" (click)="onToggleAllStatus('OFF')">
+    Tout Éteindre
+  </button>
 </div>

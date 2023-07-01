@@ -7,16 +7,10 @@ export {
   fillInput,
   getAppareil,
   getAppareilByIndex,
-  getAppareilNameText
-} from "./commons.utils"
+  getAppareilNameText,
+} from './commons.utils';
 
-export {
-  isSignIn,
-  isSignOut,
-  signIn,
-  signOut,
-  PageInfo,
-} from "./auth.utils"
+export { isSignIn, isSignOut, signIn, signOut, PageInfo } from './auth.utils';
 
 export {
   checkAppareilStyles,
@@ -27,16 +21,15 @@ export {
   CheckAppareilStatusParams,
   CheckAppareilInfo,
   checkAppareilStatus,
-} from "./home.utils"
+} from './home.utils';
 
 export {
   isAppareilDetailsPageParams,
   isAppareilDetailsPage,
   goToDetailsPage,
   AppareilDetailsPageParamsWithoutStatus,
-} from "./appareilDetails.utils"
+} from './appareilDetails.utils';
 
-export {
-  AddAppareilParams,
-  addAppareil,
-} from "./newAppareil.utils"
+export { AddAppareilParams, addAppareil } from './newAppareil.utils';
+
+export { fillSignUpForm, clickSignUpBtn } from './sign-up.utils';

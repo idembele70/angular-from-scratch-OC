@@ -7,6 +7,8 @@ interface User {
   gender: Gender;
 }
 
+type SignUpCredentials = Partial<Pick<User, 'gender'>> & Omit<User, 'gender'>;
+
 type SignInCredentials = Pick<User, 'email' | 'password'>;
 type UserWithoutPassword = Omit<User, 'password'>;
 type UserPartialPassword = Partial<Pick<User, 'password'>> &
@@ -17,6 +19,7 @@ export {
   User,
   Gender,
   UserWithoutPassword,
+  SignUpCredentials,
   SignInCredentials,
   LoggedUser,
   UserPartialPassword,

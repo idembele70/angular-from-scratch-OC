@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, mergeMap, of } from 'rxjs';
-import { User } from 'src/app/models/User.model';
+import { SignUpCredentials, User } from 'src/app/models/User.model';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -40,7 +40,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     });
   };
   onSubmitForm = () => {
-    const formValue: User = this.newUserForm.value;
+    const formValue: SignUpCredentials = this.newUserForm.value;
     this.newUserSubscription = this.userService
       .getOneUser(formValue['email'])
       .pipe(
@@ -52,7 +52,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
             lastName: formValue['lastName'],
             email: formValue['email'],
             password: formValue['password'],
-            gender: formValue['gender'],
+            gender: formValue['gender'] || 'female',
           });
         })
       )

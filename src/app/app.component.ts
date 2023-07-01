@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
         console.error("Une Erreur s'est produit lors de la subscription", err);
       },
     });
+    this.authService.emitAuthValue();
   }
   ngOnDestroy(): void {
     this.authSubscription.unsubscribe();

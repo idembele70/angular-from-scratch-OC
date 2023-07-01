@@ -4,43 +4,20 @@
     <form [formGroup]="newUserForm" (ngSubmit)="onSubmitForm()">
       <div class="form-group">
         <label for="firstName">Prénom</label>
-        <input
-          type="text"
-          id="firstName"
-          placeholder="Prénom"
-          class="form-control"
-          formControlName="firstName"
-        />
+        <input type="text" id="firstName" placeholder="Prénom" class="form-control" formControlName="firstName" />
       </div>
       <div class="form-group">
         <label for="lastName">Nom</label>
-        <input
-          type="text"
-          id="lastName"
-          placeholder="Nom"
-          class="form-control"
-          formControlName="lastName"
-        />
+        <input type="text" id="lastName" placeholder="Nom" class="form-control" formControlName="lastName" />
       </div>
       <div class="form-group">
         <label for="email">email</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-          class="form-control"
-          formControlName="email"
-        />
+        <input type="email" id="email" placeholder="Email" class="form-control" formControlName="email" />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="mot de passe"
-          class="form-control"
-          formControlName="password"
-        />
+        <input type="password" id="password" placeholder="Mot de passe" class="form-control" formControlName="password"
+          autocomplete="current-password" />
       </div>
       <div class="form-group">
         <label for="gender">Genre</label>
@@ -49,16 +26,12 @@
           <option value="female">Femme</option>
         </select>
       </div>
-      <button
-        type="submit"
-        class="btn btn-success"
-        [disabled]="newUserForm.invalid"
-      >
+      <button type="submit" class="btn btn-success" [disabled]="newUserForm.invalid">
         S'inscrire
       </button>
     </form>
     <a routerLink="/sign-in" class="btn btn-primary show sign-in-link">
-      Je veux me me connecter
+      Je veux me connecter
     </a>
   </div>
 </div>

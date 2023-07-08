@@ -19,5 +19,24 @@ Use the same syntax as the template below to write a new use case:
 3. Execute the action...
 4. The user should see this...
 ...
-
 ```
+
+# Numbering rules
+
+## Front-End
+
+| Number | Page(s) name            | Related route(s)   |
+| ------ | ----------------------- | ------------------ |
+| 0XX    | Login                   | /sign-\*\*         |
+| 1XX    | Home                    | /appareils         |
+| 2XX    | Appareils management    | /appareils/id\*\*  |
+| 3XX    | Users management        | /users/\*\*        |
+| 4XX    |                         |                    |
+| 5XX    |                         |                    |
+| 6XX    |                         |                    |
+| 7XX    |                         |                    |
+| 8XX    |                         |                    |
+| 9XX    | Other pages and actions | Every other routes |
+
+Note:
+All the routes will follow the **BaseURL** : http://localhost:4200/
